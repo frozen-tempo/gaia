@@ -1,0 +1,79 @@
+{
+  "tools": [
+    {
+      "toolName": "Early Stage Scheme Design",
+      "toolAuthor": "Luke Gilbert",
+      "toolDescription": "Use this tool to carry out an inital stage design for a project and provide intial carbon data for the project.",
+      "toolImage": "concept.jpeg",
+      "toolExtension": "/scheme-design",
+      "sections": [
+        {
+          "sectionName": "Use Tool",
+          "sectionLink": "/scheme-design"
+        },
+        {
+          "sectionName": "Documentation",
+          "sectionLink": "/scheme-design/documentation"
+        },
+        {
+          "sectionName": "FAQs",
+          "sectionLink": "/scheme-design/faqs"
+        }
+      ]
+    }
+  ],
+  "DLSubTypes": [
+    { "Type": "Services" },
+    { "Type": "Finishes" },
+    { "Type": "Structural Topping" },
+    { "Type": "Green Roof" },
+    { "Type": "Suspended Ceiling" },
+    { "Type": "Misc." }
+  ],
+  "LLSubTypes": [
+    {
+      "Type": "Domestic & Resi: A1",
+      "Tooltip": "All usages within self-contained dwelling units (a unit occupied by a single family or a modular student accomodation unit with a secure door comprising not more than six single bedrooms and an internal corridor) Communal areas (including kitchens) in blocks of flats with limited use. For communal areas in other blocks of flats."
+    },
+    {
+      "Type": "Domestic & Resi: A2",
+      "Tooltip": "Bedrooms and dormitories except those in self-contained single family dwelling units and in hotels and motels."
+    }
+  ],
+  "RebarRates": ["0.8%", "1%", "2%", "3%", "4%"],
+  "ConcreteCarbon": [
+    "Insitu - C16/20 - CEM1 (OPC)",
+    "Insitu - C25/30 - CEM1",
+    "Insitu - C25/30 - 25% GGBS",
+    "Insitu - C25/30 - 50% GGBS",
+    "Insitu - C25/30 - 75% GGBS",
+    "Insitu - C30/37 - 35% GGBS",
+    "Insitu - C32/40 - 25% GGBS",
+    "Insitu - C32/40 - 50% GGBS",
+    "Insitu - C32/40 - 75% GGBS",
+    "Insitu - C40/50 - 25% GGBS",
+    "Insitu - C40/50 - 50% GGBS",
+    "Insitu - C40/50 - 75% GGBS"
+  ],
+  "RebarCarbon": [
+    "Steel - Rebar (UK CARES)",
+    "Steel - Rebar (Worldwide)",
+    "Steel - PT Strands (UK CARES)",
+    "Steel - PT Strands (Worldwide)"
+  ],
+  "SteelCarbon": [
+    "Steel - UK Open Sections",
+    "Steel - UK Hollow Sections",
+    "Steel - Europe Sections",
+    "Steel - Plate",
+    "Steel - Galvanised Profiled Sheet",
+    "Steel - Hot Rolled Galvanised"
+  ],
+  "TimberCarbon": [
+    "Timber - CLT (Engineered Timber)",
+    "Timber - Glulam (Engineered Timber)",
+    "Timber - Studwork / Framing / Flooring (Softwood)",
+    "Timber - Studwork / Framing / Flooring (Hardwood)",
+    "Timber - Sheet (Plywood)"
+  ]
+}

@@ -1,0 +1,423 @@
+/* Global Styling */
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Nav Styling */
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 100px;
+}
+
+.main-nav {
+  display: flex;
+  width: 100%;
+  height: 75px;
+  border-bottom: 3px solid #575395;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 75%;
+}
+
+.nav-image {
+  height: 65px;
+}
+
+/* DropdownStyling */
+
+.dropdown-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown-options {
+  position: absolute;
+  top: 100%;
+  background-color: white;
+  width: 100%;
+  border: 1px solid #575395;
+  border-bottom: 0;
+  z-index: 1;
+  display: none;
+}
+
+.dropdown-options li {
+  padding-block: 15px;
+  border-bottom: 1px solid #575395;
+}
+
+.dropdown-options li:hover {
+  background-color: #8a8aab;
+  transition: all 0.5s;
+}
+
+.dropdown-button {
+  outline: none;
+  border: none;
+  text-transform: uppercase;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #575395;
+  background-color: white;
+}
+
+.dropdown-icon {
+  height: 25px;
+  margin-left: 20px;
+  transition: all 0.5s;
+  transform: rotate(0deg);
+}
+
+.rotate {
+  transition: all 0.5s;
+  transform: rotate(-180deg);
+}
+
+/* Home Page Styling */
+
+.home-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.home-header {
+  text-align: center;
+  color: #575395;
+  margin-block: 25px;
+}
+
+.home-description {
+  text-align: center;
+}
+
+/* Tool Card Styling */
+
+.tool-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 300px);
+  gap: 50px;
+  margin-block: 25px;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.tool-card {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 15px;
+  padding: 15px;
+  background-color: #eeeeee;
+  transition: ease-in-out 0.5s;
+  height: 200px;
+}
+
+.tool-card:hover {
+  scale: 1.05;
+  transition: ease-in-out 0.5s;
+}
+
+.tool-name {
+  color: #575395;
+  font-size: 24px;
+}
+
+.tool-author {
+  color: black;
+  font-size: 16px;
+}
+
+.tool-image {
+  opacity: 25%;
+  position: absolute;
+  display: flex;
+  top: 0%;
+  left: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+/* Scheme Design Styling */
+
+.scheme-page {
+  display: grid;
+  justify-content: center;
+}
+
+.scheme-input-section {
+  display: grid;
+  grid-template-columns: 350px 350px 500px 125px;
+  justify-content: center;
+  gap: 100px;
+}
+
+.project-info {
+  display: grid;
+  grid-template-columns: 175px 175px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: "scheme-input-header scheme-input-header" "input1 input1" "input2 input2" "input3 input4" "input5 input6";
+  gap: 25px;
+  margin: 25px;
+}
+
+.building-info {
+  display: grid;
+  grid-template-columns: 175px 175px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: "scheme-input-header scheme-input-header" "input1 input2" "input3 input3" "input4 input5" "input6 input7";
+  gap: 25px;
+  margin: 25px;
+}
+
+.loading-info {
+  display: grid;
+  grid-template-columns: 500px;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-areas: "scheme-input-header scheme-input-header" "input1 input1" "input1 input1" "input2 input2" "input2 input2";
+  gap: 25px;
+  margin: 25px;
+}
+
+.scheme-input-header {
+  grid-area: scheme-input-header;
+  color: gray;
+}
+
+input {
+  height: 25px;
+  font-size: 16px;
+  padding: 10px;
+}
+
+select {
+  height: 50px;
+  font-size: 16px;
+  padding: 10px;
+  width: 250px;
+}
+
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input1 {
+  grid-area: input1;
+  position: relative;
+}
+
+.input2 {
+  grid-area: input2;
+  position: relative;
+}
+
+.input3 {
+  grid-area: input3;
+}
+
+.input4 {
+  grid-area: input4;
+}
+
+.input5 {
+  grid-area: input5;
+}
+
+.input6 {
+  grid-area: input6;
+}
+
+.input7 {
+  grid-area: input7;
+}
+
+.box .input-box-title {
+  margin-left: 100px;
+}
+
+.input-box-title {
+  display: flex;
+  flex-direction: column;
+  color: #575395;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+/* Load Table Styles */
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+  border: 1px solid black;
+  border-radius: 5px;
+  overflow: auto;
+  position: relative;
+}
+
+.table-headers {
+  width: 100%;
+  font-size: 12px;
+  position: sticky;
+  top: 0;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th {
+  background-color: #575395;
+  color: white;
+  padding-block: 1px;
+  text-align: center;
+  height: 25px;
+}
+
+td {
+  border-bottom: 1px solid lightgray;
+  font-size: 16px;
+  text-align: center;
+}
+
+tr {
+  height: 25px;
+}
+
+tr:hover {
+  background-color: #bbbbdb;
+}
+
+/* Pop-up styling */
+
+.popup {
+  position: fixed;
+  background: #00000050;
+  width: 100%;
+  height: 150vh;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  width: 450px;
+  margin: 0 auto;
+  height: auto;
+  max-height: 70vh;
+  margin-top: calc(100vh - 85vh - 20px);
+  background: #fff;
+  border-radius: 4px;
+  padding: 20px;
+  border: 1px solid #999;
+  overflow: auto;
+  z-index: 2;
+}
+
+.add-load-button {
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  z-index: 1;
+  background-color: white;
+  border-radius: 50%;
+  right: -10px;
+  top: 0px;
+  border: 1px solid #575395;
+  font-size: 20px;
+  color: #575395;
+  cursor: pointer;
+}
+
+.popup-button {
+  height: 50px;
+  font-size: 16px;
+  padding: 10px;
+  width: 150px;
+  margin-block: 15px;
+  background-color: #575395;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: 700;
+  transition: 0.15s all;
+  align-self: center;
+}
+
+.popup-button:active {
+  scale: 0.95;
+}
+
+/* Scheme Button Styles */
+
+.scheme-button-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 125px;
+}
+
+.scheme-button {
+  width: 150px;
+  height: 50px;
+  margin-block: 15px;
+  background-color: #575395;
+  outline: none;
+  border: none;
+  border-radius: 15px;
+  color: white;
+  font-weight: 700;
+  transition: 0.15s all;
+}
+
+.box .scheme-button {
+  align-self: center;
+}
+
+.scheme-button:active {
+  scale: 0.95;
+}
+
+/* Scheme Card Styling */
+
+.scheme-card {
+  background-color: #eeeeee;
+  width: 325px;
+  margin: 25px;
+  padding: 25px;
+}
+
+.scheme-image {
+  width: 325px;
+}
