@@ -8,12 +8,10 @@ const handleToggle = (title1: string, title2: string) => {
     document.getElementById(title1)?.classList.remove("rotate");
     (document.getElementById(title2) as HTMLInputElement).style.display =
       "none";
-    console.log(title1);
   } else {
     document.getElementById(title1)?.classList.add("rotate");
     (document.getElementById(title2) as HTMLInputElement).style.display =
       "block";
-    console.log(title2);
   }
 };
 

@@ -119,9 +119,9 @@ function FlatSlabDesign(
     totalCornerSlabSWColumn + totalCornerLLColumn + totalCornerSDLColumn;
 
   const cornerColumnLoadULS =
-    1.35 * totalEdgeSlabSWColumn +
-    1.5 * totalEdgeLLColumn +
-    1.35 * totalEdgeSDLColumn;
+    1.35 * totalCornerSlabSWColumn +
+    1.5 * totalCornerLLColumn +
+    1.35 * totalCornerSDLColumn;
 
   const rebarRatio = designData.projectSettings.rebarRate;
 
@@ -133,7 +133,6 @@ function FlatSlabDesign(
   var minInternalLoadDifference = Math.abs(
     internalColumnLoadULS - +internalRebarCurve[0][0]
   );
-
   var closestColumnWidth = internalRebarCurve.reduce(function (
     prev: number[],
     curr: number[]
@@ -236,10 +235,6 @@ function FlatSlabDesign(
       100) *
     (columnVolume + slabVolume);
 
-  console.log("Col Vol: " + columnVolume);
-  console.log("Slab Vol: " + slabVolume);
-  console.log("Rebar Vol: " + rebarVolume);
-
   // Column Embodied Carbon
   const columnEmbodied = {
     "A1-A3": columnVolume * columnCarbon[0].density * columnCarbon[0]["A1-A3"],
@@ -282,6 +277,8 @@ function FlatSlabDesign(
     slabVolume * (slabEmbodied["A1-A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
     rebarVolume *
       (rebarEmbodied["A1-A3"] + rebarEmbodied.A4 + rebarEmbodied.A5);
+
+  console.log(A1_A5);
 
   return {
     schemeType: "RC Flat Slab",

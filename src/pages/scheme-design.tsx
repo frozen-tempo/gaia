@@ -87,8 +87,6 @@ function schemeMain() {
     setProjectSettingOpen(!projectSettingOpen);
   }
 
-  console.log(projectData.projectSettings);
-
   return (
     <main className="scheme-page">
       <div className="scheme-input-section">
