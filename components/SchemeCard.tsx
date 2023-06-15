@@ -59,6 +59,8 @@ function SchemeCard(props: projectData) {
       <p>{`Internal Column Load (ULS): ${scheme?.internalULSLoad} kN`}</p>
       <p>{`Edge Column Load (ULS): ${scheme?.edgeULSLoad} kN`}</p>
       <p>{`Corner Column Load (ULS): ${scheme?.cornerULSLoad} kN`}</p>
+      <p>{`Gross Internal Floor Area: ${scheme?.grossInternalFloorArea} m2`}</p>
+      <p>{`Embodied Carbon (A1-A5): ${scheme?.A1_A5} kgCo2/m2`}</p>
     </div>
   ));
 

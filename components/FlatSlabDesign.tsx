@@ -272,11 +272,12 @@ function FlatSlabDesign(
   };
 
   const A1_A5 =
-    columnVolume *
-      (columnEmbodied["A1-A3"] + columnEmbodied.A4 + columnEmbodied.A5) +
-    slabVolume * (slabEmbodied["A1-A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
-    rebarVolume *
-      (rebarEmbodied["A1-A3"] + rebarEmbodied.A4 + rebarEmbodied.A5);
+    (columnEmbodied["A1-A3"] +
+      columnEmbodied.A4 +
+      columnEmbodied.A5 +
+      (slabEmbodied["A1-A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
+      (rebarEmbodied["A1-A3"] + rebarEmbodied.A4 + rebarEmbodied.A5)) /
+    GIA;
 
   return {
     schemeType: "RC Flat Slab",
@@ -287,6 +288,8 @@ function FlatSlabDesign(
     internalULSLoad: internalColumnLoadULS.toFixed(2),
     edgeULSLoad: edgeColumnLoadULS.toFixed(2),
     cornerULSLoad: cornerColumnLoadULS.toFixed(2),
+    grossInternalFloorArea: GIA.toFixed(2),
+    A1_A5: A1_A5.toFixed(2),
   };
 }
 
