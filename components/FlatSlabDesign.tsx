@@ -239,7 +239,11 @@ function FlatSlabDesign(
   const columnEmbodied = {
     "A1-A3": columnVolume * columnCarbon[0].density * columnCarbon[0]["A1-A3"],
     A4: columnVolume * columnCarbon[0].density * columnCarbon[0]["A4"],
-    A5: columnVolume * columnCarbon[0].density * columnCarbon[0]["WF"],
+    A5:
+      columnVolume *
+      columnCarbon[0].density *
+      ((columnCarbon[0]["A1-A3"] + columnCarbon[0]["A4"]) *
+        columnCarbon[0]["WF"]),
     C2: columnVolume * columnCarbon[0].density * columnCarbon[0]["C2"],
     "C3/C4": columnVolume * columnCarbon[0].density * columnCarbon[0]["C3/C4"],
     D: columnVolume * columnCarbon[0].density * columnCarbon[0]["D"],
@@ -251,7 +255,10 @@ function FlatSlabDesign(
   const slabEmbodied = {
     "A1-A3": slabVolume * slabCarbon[0].density * slabCarbon[0]["A1-A3"],
     A4: slabVolume * slabCarbon[0].density * slabCarbon[0]["A4"],
-    A5: slabVolume * slabCarbon[0].density * slabCarbon[0]["WF"],
+    A5:
+      slabVolume *
+      slabCarbon[0].density *
+      ((slabCarbon[0]["A1-A3"] + slabCarbon[0]["A4"]) * slabCarbon[0]["WF"]),
     C2: slabVolume * slabCarbon[0].density * slabCarbon[0]["C2"],
     "C3/C4": slabVolume * slabCarbon[0].density * slabCarbon[0]["C3/C4"],
     D: slabVolume * slabCarbon[0].density * slabCarbon[0]["D"],
@@ -263,7 +270,10 @@ function FlatSlabDesign(
   const rebarEmbodied = {
     "A1-A3": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A1-A3"],
     A4: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A4"],
-    A5: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["WF"],
+    A5:
+      rebarVolume *
+      rebarCarbon[0].density *
+      ((rebarCarbon[0]["A1-A3"] + rebarCarbon[0]["A4"]) * rebarCarbon[0]["WF"]),
     C2: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C2"],
     "C3/C4": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C3/C4"],
     D: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["D"],
