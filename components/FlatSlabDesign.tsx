@@ -278,14 +278,15 @@ function FlatSlabDesign(
     rebarVolume *
       (rebarEmbodied["A1-A3"] + rebarEmbodied.A4 + rebarEmbodied.A5);
 
-  console.log(A1_A5);
-
   return {
     schemeType: "RC Flat Slab",
     structuralDepth: slabDepth,
     internalColumnSquare: internalColumnSquare,
     edgeColumnSquare: edgeColumnSquare,
     cornerColumnSquare: cornerColumnSquare,
+    internalULSLoad: internalColumnLoadULS.toFixed(2),
+    edgeULSLoad: edgeColumnLoadULS.toFixed(2),
+    cornerULSLoad: cornerColumnLoadULS.toFixed(2),
   };
 }
 

@@ -56,6 +56,9 @@ function SchemeCard(props: projectData) {
       <p>{`Internal Square Column: ${scheme?.internalColumnSquare}mm Square`}</p>
       <p>{`Edge Square Column: ${scheme?.edgeColumnSquare}mm Square`}</p>
       <p>{`Corner Square Column: ${scheme?.cornerColumnSquare}mm Square`}</p>
+      <p>{`Internal Column Load (ULS): ${scheme?.internalULSLoad} kN`}</p>
+      <p>{`Edge Column Load (ULS): ${scheme?.edgeULSLoad} kN`}</p>
+      <p>{`Corner Column Load (ULS): ${scheme?.cornerULSLoad} kN`}</p>
     </div>
   ));
 
