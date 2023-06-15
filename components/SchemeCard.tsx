@@ -53,9 +53,9 @@ function SchemeCard(props: projectData) {
         alt="flat-slab-icon"
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}mm`}</p>
-      <p>{`Internal Square Column: ${scheme?.internalColumnSquare}mm Square`}</p>
-      <p>{`Edge Square Column: ${scheme?.edgeColumnSquare}mm Square`}</p>
-      <p>{`Corner Square Column: ${scheme?.cornerColumnSquare}mm Square`}</p>
+      <p>{`Internal Column: ${scheme?.internalColumnSquare}mm Square`}</p>
+      <p>{`Edge Column: ${scheme?.edgeColumnSquare}mm Square`}</p>
+      <p>{`Corner Column: ${scheme?.cornerColumnSquare}mm Square`}</p>
       <p>{`Internal Column Load (ULS): ${scheme?.internalULSLoad} kN`}</p>
       <p>{`Edge Column Load (ULS): ${scheme?.edgeULSLoad} kN`}</p>
       <p>{`Corner Column Load (ULS): ${scheme?.cornerULSLoad} kN`}</p>
