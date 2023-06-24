@@ -286,9 +286,7 @@ function schemeMain() {
           </button>
         </section>
       </div>
-      <div className="scheme-card-container">
-        <SchemeCard {...projectData} />
-      </div>
+      <SchemeCard {...projectData} />
       {projectSettingOpen && (
         <ProjectSettings
           setIsOpen={setProjectSettingOpen}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import * as d3 from "d3";
+import SteelHCUDesign from "./SteelHCUDesign";
 
 function SchemeCard(props: projectData) {
   let deadLoadTotal = 0;
@@ -42,7 +43,18 @@ function SchemeCard(props: projectData) {
     groundLiveTotal,
     roofLiveTotal
   );
+  const HCUSteel = SteelHCUDesign(
+    props,
+    deadLoadTotal,
+    groundDeadTotal,
+    roofDeadTotal,
+    liveLoadTotal,
+    groundLiveTotal,
+    roofLiveTotal
+  );
+
   designs.push(flatSlab);
+  designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className="scheme-card">
@@ -64,7 +76,7 @@ function SchemeCard(props: projectData) {
     </div>
   ));
 
-  return <div>{schemeCardElements}</div>;
+  return <div className="scheme-card-container">{schemeCardElements}</div>;
 }
 
 export default SchemeCard;

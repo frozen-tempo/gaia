@@ -16,8 +16,26 @@ function SteelHCUDesign(
   roofLiveTotal: number
 ) {
   // Hollowcore Design from Bison / Forterra Precast HCU Load Tables
+
+  const HCUDesignTable: {} = schemeDesignData.precastHCU;
+
+  Object.keys(HCUDesignTable)
+    .sort()
+    .map((depth) => {
+      console.log(depth);
+    });
+
   return {
     schemeType: "Steel Beam & HCU Slab",
+    structuralDepth: "slabDepth",
+    internalColumnSquare: "internalColumnSquare",
+    edgeColumnSquare: "edgeColumnSquare",
+    cornerColumnSquare: "cornerColumnSquare",
+    internalULSLoad: "internalColumnLoadULS",
+    edgeULSLoad: "edgeColumnLoadULS",
+    cornerULSLoad: "cornerColumnLoadULS",
+    grossInternalFloorArea: "GIA",
+    A1_A5: "A1_A5",
   };
 }
 

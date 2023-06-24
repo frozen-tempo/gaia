@@ -411,6 +411,11 @@ tr:hover {
 
 /* Scheme Card Styling */
 
+.scheme-card-container {
+  display: flex;
+  flex-direction: row;
+}
+
 .scheme-card {
   background-color: #eeeeee;
   width: 325px;
