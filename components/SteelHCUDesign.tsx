@@ -26,6 +26,7 @@ function SteelHCUDesign(
   const beamSpan = designData.yGrid;
   const slabDesignLoad = deadLoadTotal + liveLoadTotal;
   var slabSpec = "";
+  var validSlab = false;
 
   Object.keys(HCUDesignTable)
     .sort()
@@ -35,13 +36,13 @@ function SteelHCUDesign(
       ] as HCUDesignData;
       depthData.design.map((dataPoint: number[]) => {
         if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
-          console.log(slabDesignLoad);
-          console.log(slabSpan);
-          console.log(depth);
           slabSpec = depth;
-          return;
+          validSlab = true;
         }
-      });
+      })
+      if (validSlab) {
+        return;
+      }
     });
   console.log(slabSpec);
 
