@@ -5,6 +5,10 @@ import schemeDesignData from "../src/data/scheme-design-chart-data.json";
 import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
+interface HCUDesignData {
+  design: [[]];
+  selfWeight: number;
+}
 
 function SteelHCUDesign(
   designData: projectData,
@@ -18,12 +22,28 @@ function SteelHCUDesign(
   // Hollowcore Design from Bison / Forterra Precast HCU Load Tables
 
   const HCUDesignTable: {} = schemeDesignData.precastHCU;
+  const slabSpan = designData.xGrid;
+  const beamSpan = designData.yGrid;
+  const slabDesignLoad = deadLoadTotal + liveLoadTotal;
+  var slabSpec = "";
 
   Object.keys(HCUDesignTable)
     .sort()
     .map((depth) => {
-      console.log(depth);
+      const depthData = HCUDesignTable[
+        depth as keyof typeof HCUDesignTable
+      ] as HCUDesignData;
+      depthData.design.map((dataPoint: number[]) => {
+        if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
+          console.log(slabDesignLoad);
+          console.log(slabSpan);
+          console.log(depth);
+          slabSpec = depth;
+          return;
+        }
+      });
     });
+  console.log(slabSpec);
 
   return {
     schemeType: "Steel Beam & HCU Slab",
