@@ -55,73 +55,45 @@ function FlatSlabDesign(
     designData.xGrid * designData.yGrid * numFloors;
 
   const otherInternalColumnArea = designData.xGrid * designData.yGrid;
-  const intermediateEdgeColumnArea = intermediateInternalColumnArea / 2;
-  const otherEdgeColumnArea = otherInternalColumnArea / 2;
-  const intermediateCornerColumnArea = intermediateInternalColumnArea / 4;
-  const otherCornerColumnArea = otherInternalColumnArea / 4;
   const slabSW = (slabDepth / 1000) * 25;
 
+  function simpleLTD(intermediateColumnArea: number, otherColumnArea: number) {
+    const totalSlabSWColumn =
+      slabSW * (intermediateColumnArea + otherColumnArea);
+
+    const totalSDLColumn =
+      intermediateColumnArea * deadLoadTotal + otherColumnArea * roofDeadTotal;
+
+    const totalLLColumn =
+      intermediateColumnArea * liveLoadTotal + otherColumnArea * roofLiveTotal;
+
+    const columnLoadSLS = totalSlabSWColumn + totalLLColumn + totalSDLColumn;
+
+    const columnLoadULS =
+      1.35 * totalSlabSWColumn + 1.5 * totalLLColumn + 1.35 * totalSDLColumn;
+    return {
+      columnLoadULS: columnLoadULS,
+      columnLoadSLS: columnLoadSLS,
+    };
+  }
+
   // Internal Column Simple LTD
-  const totalInternalSlabSWColumn =
-    slabSW * (intermediateInternalColumnArea + otherInternalColumnArea);
-
-  const totalInternalSDLColumn =
-    intermediateInternalColumnArea * deadLoadTotal +
-    otherInternalColumnArea * roofDeadTotal;
-
-  const totalInternalLLColumn =
-    intermediateInternalColumnArea * liveLoadTotal +
-    otherInternalColumnArea * roofLiveTotal;
-
-  const internalColumnLoadSLS =
-    totalInternalSlabSWColumn + totalInternalLLColumn + totalInternalSDLColumn;
-
-  const internalColumnLoadULS =
-    1.35 * totalInternalSlabSWColumn +
-    1.5 * totalInternalLLColumn +
-    1.35 * totalInternalSDLColumn;
+  const internalLTD = simpleLTD(
+    intermediateInternalColumnArea,
+    otherInternalColumnArea
+  );
 
   // Edge Column Simple LTD
-
-  const totalEdgeSlabSWColumn =
-    slabSW * (intermediateEdgeColumnArea + otherEdgeColumnArea);
-
-  const totalEdgeSDLColumn =
-    intermediateEdgeColumnArea * deadLoadTotal +
-    otherEdgeColumnArea * roofDeadTotal;
-
-  const totalEdgeLLColumn =
-    intermediateEdgeColumnArea * liveLoadTotal +
-    otherEdgeColumnArea * roofLiveTotal;
-
-  const edgeColumnLoadSLS =
-    totalEdgeSlabSWColumn + totalEdgeLLColumn + totalEdgeSDLColumn;
-
-  const edgeColumnLoadULS =
-    1.35 * totalEdgeSlabSWColumn +
-    1.5 * totalEdgeLLColumn +
-    1.35 * totalEdgeSDLColumn;
+  const edgeLTD = simpleLTD(
+    intermediateInternalColumnArea / 2,
+    otherInternalColumnArea / 2
+  );
 
   // Corner Column Simple LTD
-
-  const totalCornerSlabSWColumn =
-    slabSW * (intermediateCornerColumnArea + otherCornerColumnArea);
-
-  const totalCornerSDLColumn =
-    intermediateCornerColumnArea * deadLoadTotal +
-    otherCornerColumnArea * roofDeadTotal;
-
-  const totalCornerLLColumn =
-    intermediateCornerColumnArea * liveLoadTotal +
-    otherEdgeColumnArea * roofLiveTotal;
-
-  const cornerColumnLoadSLS =
-    totalCornerSlabSWColumn + totalCornerLLColumn + totalCornerSDLColumn;
-
-  const cornerColumnLoadULS =
-    1.35 * totalCornerSlabSWColumn +
-    1.5 * totalCornerLLColumn +
-    1.35 * totalCornerSDLColumn;
+  const cornerLTD = simpleLTD(
+    intermediateInternalColumnArea / 4,
+    otherInternalColumnArea / 4
+  );
 
   const rebarRatio = designData.projectSettings.rebarRate;
 
@@ -130,15 +102,13 @@ function FlatSlabDesign(
     schemeDesignData.internalRCColumn[
       rebarRatio as keyof typeof schemeDesignData.internalRCColumn
     ];
-  var minInternalLoadDifference = Math.abs(
-    internalColumnLoadULS - +internalRebarCurve[0][0]
-  );
+
   var closestColumnWidth = internalRebarCurve.reduce(function (
     prev: number[],
     curr: number[]
   ) {
-    return Math.abs(curr[0] - internalColumnLoadULS) <
-      Math.abs(prev[0] - internalColumnLoadULS)
+    return Math.abs(curr[0] - internalLTD.columnLoadULS) <
+      Math.abs(prev[0] - internalLTD.columnLoadULS)
       ? curr
       : prev;
   });
@@ -167,7 +137,9 @@ function FlatSlabDesign(
         [key: string]: { [key: string]: number[][] };
       }
     )[edgeColumnSize][rebarRatio];
-    if (RayCasting(edgeColumnDesignMoment[1], edgeColumnLoadULS, rebarCurve)) {
+    if (
+      RayCasting(edgeColumnDesignMoment[1], edgeLTD.columnLoadULS, rebarCurve)
+    ) {
       edgeColumnSquare = +edgeColumnSize;
       break;
     }
@@ -194,15 +166,35 @@ function FlatSlabDesign(
       }
     )[cornerColumnSize][rebarRatio];
     if (
-      RayCasting(cornerColumnDesignMoment[1], cornerColumnLoadULS, rebarCurve)
+      RayCasting(
+        cornerColumnDesignMoment[1],
+        cornerLTD.columnLoadULS,
+        rebarCurve
+      )
     ) {
       cornerColumnSquare = +cornerColumnSize;
       break;
     }
   }
 
+  // Column Loads Including Column SW
+
+  const internalColumnULSLTD =
+    internalLTD.columnLoadULS +
+    1.35 * designData.buildingHeight * (internalColumnSquare / 1000) ** 2 * 25;
+  const edgeColumnULSLTD =
+    edgeLTD.columnLoadULS +
+    1.35 * designData.buildingHeight * (edgeColumnSquare / 1000) ** 2 * 25 * 4;
+  const cornerColumnULSLTD =
+    cornerLTD.columnLoadULS +
+    1.35 *
+      designData.buildingHeight *
+      (cornerColumnSquare / 1000) ** 2 *
+      25 *
+      4;
+
   // Carbon Calculation
-  const GIA = 4 * designData.xGrid * designData.yGrid * numFloors; // Gross Internal Floor Area
+  const GIA = 4 * designData.xGrid * designData.yGrid * (numFloors + 1); // Gross Internal Floor Area
   const cornerColumnArea = (4 * cornerColumnSquare ** 2) / 1000000;
   const edgeColumnArea = (4 * edgeColumnSquare ** 2) / 1000000;
   const internalColumnArea = internalColumnSquare ** 2 / 1000000;
@@ -295,9 +287,9 @@ function FlatSlabDesign(
     internalColumnSquare: internalColumnSquare,
     edgeColumnSquare: edgeColumnSquare,
     cornerColumnSquare: cornerColumnSquare,
-    internalULSLoad: internalColumnLoadULS.toFixed(2),
-    edgeULSLoad: edgeColumnLoadULS.toFixed(2),
-    cornerULSLoad: cornerColumnLoadULS.toFixed(2),
+    internalULSLoad: internalColumnULSLTD.toFixed(2),
+    edgeULSLoad: edgeColumnULSLTD.toFixed(2),
+    cornerULSLoad: cornerColumnULSLTD.toFixed(2),
     grossInternalFloorArea: GIA.toFixed(2),
     A1_A5: A1_A5.toFixed(2),
   };
