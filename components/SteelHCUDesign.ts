@@ -5,6 +5,7 @@ import schemeDesignData from "../src/data/scheme-design-chart-data.json";
 import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
+import { exit } from "process";
 interface HCUDesignData {
   design: [[]];
   selfWeight: number;
@@ -21,30 +22,26 @@ function SteelHCUDesign(
 ) {
   // Hollowcore Design from Bison / Forterra Precast HCU Load Tables
 
-  const HCUDesignTable: {} = schemeDesignData.precastHCU;
+  const HCUDesignTable = schemeDesignData.precastHCU;
   const slabSpan = designData.xGrid;
   const beamSpan = designData.yGrid;
   const slabDesignLoad = deadLoadTotal + liveLoadTotal;
-  var slabSpec = "";
-  var validSlab = false;
+  var hollowCoreDepth = "";
+  var depthFound = false;
 
-  Object.keys(HCUDesignTable)
-    .sort()
-    .map((depth) => {
-      const depthData = HCUDesignTable[
-        depth as keyof typeof HCUDesignTable
-      ] as HCUDesignData;
-      depthData.design.map((dataPoint: number[]) => {
-        if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
-          slabSpec = depth;
-          validSlab = true;
-        }
-      })
-      if (validSlab) {
+  for (const [slabDepth, data] of Object.entries(HCUDesignTable).sort()) {
+    data.design.forEach((dataPoint) => {
+      if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
+        console.log(hollowCoreDepth);
+        hollowCoreDepth = slabDepth;
+        depthFound = true;
         return;
       }
     });
-  console.log(slabSpec);
+    if (depthFound) {
+      break;
+    }
+  }
 
   return {
     schemeType: "Steel Beam & HCU Slab",
