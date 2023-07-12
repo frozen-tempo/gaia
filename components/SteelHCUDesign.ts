@@ -1,11 +1,9 @@
-import React from "react";
-import { InternalSymbolName } from "typescript";
 import { projectData, schemeDesign } from "typings";
 import schemeDesignData from "../src/data/scheme-design-chart-data.json";
 import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
-import { exit } from "process";
+import SteelBeamDesign from "./SteelBeamDesign";
 interface HCUDesignData {
   design: [[]];
   selfWeight: number;
@@ -42,6 +40,15 @@ function SteelHCUDesign(
       break;
     }
   }
+
+  SteelBeamDesign(
+    deadLoadTotal * slabSpan,
+    liveLoadTotal * slabSpan,
+    beamSpan,
+    "full",
+    "UB",
+    360
+  );
 
   return {
     schemeType: "Steel Beam & HCU Slab",

@@ -49,3 +49,31 @@ export interface schemeDesign {
   schemeType: string;
   structuralDepth: number;
 }
+
+export interface ubBeam {
+  mass: number;
+  h: number;
+  b: number;
+  tw: number;
+  tf: number;
+  r: number;
+  d: number;
+  cw_tw: number;
+  cf_tf: number;
+  C: number;
+  N: number;
+  n: number;
+  Imajor: number;
+  Iminor: number;
+  imajor: number;
+  iminor: number;
+  Smajor: number;
+  Sminor: number;
+  Zmajor: number;
+  Zminor: number;
+  U: number;
+  X: number;
+  Iw: number;
+  IT: number;
+  A: number;
+}
