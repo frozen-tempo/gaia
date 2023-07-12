@@ -36,10 +36,8 @@ function SteelBeamDesign(
     );
   });
 
-  console.log(beamList);
-
   return {
-    validBeams: beamList,
+    validBeams: beamList.reverse(),
   };
 }
 
