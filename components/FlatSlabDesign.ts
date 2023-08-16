@@ -284,9 +284,10 @@ function FlatSlabDesign(
   return {
     schemeType: "RC Flat Slab",
     structuralDepth: slabDepth,
-    internalColumnSquare: internalColumnSquare,
-    edgeColumnSquare: edgeColumnSquare,
-    cornerColumnSquare: cornerColumnSquare,
+    validSteelBeams: "",
+    internalColumnSquare: internalColumnSquare + "mm Square",
+    edgeColumnSquare: edgeColumnSquare + "mm Square",
+    cornerColumnSquare: cornerColumnSquare + "mm Square",
     internalULSLoad: internalColumnULSLTD.toFixed(2),
     edgeULSLoad: edgeColumnULSLTD.toFixed(2),
     cornerULSLoad: cornerColumnULSLTD.toFixed(2),

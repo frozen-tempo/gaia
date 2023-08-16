@@ -27,6 +27,27 @@ function SteelHCUDesign(
   var hollowCoreDepth = "";
   var depthFound = false;
 
+  function simpleLTD(intermediateColumnArea: number, otherColumnArea: number) {
+    const totalSlabSWColumn =
+      slabSW * (intermediateColumnArea + otherColumnArea);
+
+    const totalSDLColumn =
+      intermediateColumnArea * deadLoadTotal + otherColumnArea * roofDeadTotal;
+
+    const totalLLColumn =
+      intermediateColumnArea * liveLoadTotal + otherColumnArea * roofLiveTotal;
+
+    const columnLoadSLS = totalSlabSWColumn + totalLLColumn + totalSDLColumn;
+
+    const columnLoadULS =
+      1.35 * totalSlabSWColumn + 1.5 * totalLLColumn + 1.35 * totalSDLColumn;
+    return {
+      columnLoadULS: columnLoadULS,
+      columnLoadSLS: columnLoadSLS,
+    };
+  }
+
+  // Parse HCU Data to Find Shallowest Valid Slab
   for (const [slabDepth, data] of Object.entries(HCUDesignTable).sort()) {
     data.design.forEach((dataPoint) => {
       if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
@@ -40,8 +61,11 @@ function SteelHCUDesign(
       break;
     }
   }
+  const slabSW =
+    HCUDesignTable[hollowCoreDepth as keyof typeof HCUDesignTable].selfWeight;
 
-  SteelBeamDesign(
+  // Steel Beam Design returns a list of valid beams ordered from lightest to heaviest
+  const validSteelBeams = SteelBeamDesign(
     deadLoadTotal * slabSpan,
     liveLoadTotal * slabSpan,
     beamSpan,
@@ -50,10 +74,35 @@ function SteelHCUDesign(
     360
   );
 
+  // Load Takedown
+
+  const numFloors = designData.buildingHeight / designData.floorHeight - 1;
+
+  const intermediateInternalColumnArea =
+    designData.xGrid * designData.yGrid * numFloors;
+
+  const otherInternalColumnArea = designData.xGrid * designData.yGrid;
+
+  const internalLTD = simpleLTD(
+    intermediateInternalColumnArea,
+    otherInternalColumnArea
+  );
+
+  const edgeLTD = simpleLTD(
+    intermediateInternalColumnArea / 2,
+    otherInternalColumnArea / 2
+  );
+
+  const cornerLTD = simpleLTD(
+    intermediateInternalColumnArea / 4,
+    otherInternalColumnArea / 4
+  );
+
   return {
     schemeType: "Steel Beam & HCU Slab",
-    structuralDepth: "slabDepth",
-    internalColumnSquare: "internalColumnSquare",
+    structuralDepth: hollowCoreDepth,
+    validSteelBeams: validSteelBeams.validBeams,
+    internalColumnSquare: slabSW,
     edgeColumnSquare: "edgeColumnSquare",
     cornerColumnSquare: "cornerColumnSquare",
     internalULSLoad: "internalColumnLoadULS",
