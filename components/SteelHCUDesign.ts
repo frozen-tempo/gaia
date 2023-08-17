@@ -98,6 +98,8 @@ function SteelHCUDesign(
     otherInternalColumnArea / 4
   );
 
+  // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
+
   return {
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
@@ -105,9 +107,9 @@ function SteelHCUDesign(
     internalColumnSquare: slabSW,
     edgeColumnSquare: "edgeColumnSquare",
     cornerColumnSquare: "cornerColumnSquare",
-    internalULSLoad: "internalColumnLoadULS",
-    edgeULSLoad: "edgeColumnLoadULS",
-    cornerULSLoad: "cornerColumnLoadULS",
+    internalULSLoad: internalLTD.columnLoadSLS,
+    edgeULSLoad: edgeLTD.columnLoadSLS,
+    cornerULSLoad: cornerLTD.columnLoadSLS,
     grossInternalFloorArea: "GIA",
     A1_A5: "A1_A5",
   };

@@ -24,7 +24,11 @@ function SteelBeamDesign(
   const ShearAreaRequired = (ULSShear * 1000) / (355 / Math.sqrt(3)); //mm2
 
   function basicDesignCheck(beamID: string, beamData: any) {
-    if (beamData.Zmajor > ZRequired && beamData.Imajor > IRequired) {
+    // Have included a 20% allowance for utilisation of the beam at the concept design stage to be slightly conservative
+    if (
+      beamData.Zmajor * 0.8 > ZRequired &&
+      beamData.Imajor * 0.8 > IRequired
+    ) {
       beamList.push(beamID);
     }
   }
