@@ -54,7 +54,6 @@ function SchemeCard(props: projectData) {
   );
 
   designs.push(flatSlab);
-  designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className="scheme-card">

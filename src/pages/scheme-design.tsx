@@ -275,15 +275,6 @@ function schemeMain() {
           >
             PROJECT SETTINGS
           </button>
-          <button className="scheme-button" onClick={() => viewReport()}>
-            VIEW REPORT
-          </button>
-          <button className="scheme-button" onClick={() => exportReport()}>
-            EXPORT REPORT
-          </button>
-          <button className="scheme-button" onClick={() => viewDetailedCalcs()}>
-            VIEW DETAILED CALCULATIONS
-          </button>
         </section>
       </div>
       <SchemeCard {...projectData} />
