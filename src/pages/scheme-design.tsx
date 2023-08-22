@@ -7,7 +7,7 @@ import internalToolsData from "src/data/internal-tools-data.json";
 import EditLoad from "components/EditLoad";
 import ProjectSettings from "components/ProjectSettings";
 
-function schemeMain() {
+function SchemeMain() {
   const [projectData, setProjectData] = useState<projectData>({
     projectTitle: "",
     projectNumber: "",
@@ -322,4 +322,4 @@ function schemeMain() {
   );
 }
 
-export default schemeMain;
+export default SchemeMain;
