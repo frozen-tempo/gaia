@@ -49,7 +49,8 @@ function FlatSlabDesign(
   const slabDepth = Math.floor(closestSpan[1] / 5) * 5;
 
   /* LTD for Flat Slab */
-  const numFloors = designData.buildingHeight / designData.floorHeight - 1;
+  const numFloors =
+    Math.floor(designData.buildingHeight / designData.floorHeight) - 1;
 
   const intermediateInternalColumnArea =
     designData.xGrid * designData.yGrid * numFloors;
