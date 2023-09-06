@@ -43,6 +43,7 @@ export interface projectData {
     rebarCarbon: string;
     steelCarbon: string;
   };
+  entryFieldsFilled: boolean;
 }
 
 export interface schemeDesign {

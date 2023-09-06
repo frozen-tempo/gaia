@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import * as d3 from "d3";
-import SteelHCUDesign from "./SteelHCUDesign";
+// import SteelHCUDesign from "./SteelHCUDesign";
 
 function SchemeCard(props: projectData) {
   let deadLoadTotal = 0;
@@ -43,20 +43,21 @@ function SchemeCard(props: projectData) {
     groundLiveTotal,
     roofLiveTotal
   );
-  const HCUSteel = SteelHCUDesign(
-    props,
-    deadLoadTotal,
-    groundDeadTotal,
-    roofDeadTotal,
-    liveLoadTotal,
-    groundLiveTotal,
-    roofLiveTotal
-  );
+
+  // const HCUSteel = SteelHCUDesign(
+  //   props,
+  //   deadLoadTotal,
+  //   groundDeadTotal,
+  //   roofDeadTotal,
+  //   liveLoadTotal,
+  //   groundLiveTotal,
+  //   roofLiveTotal
+  // );
 
   designs.push(flatSlab);
 
   const schemeCardElements = designs.map((scheme) => (
-    <div key={scheme?.schemeType} className="scheme-card">
+    <div key={scheme?.schemeType} className={"scheme-card"}>
       <h2>{scheme?.schemeType}</h2>
       <img
         className="scheme-image"
@@ -69,9 +70,9 @@ function SchemeCard(props: projectData) {
       ) : (
         ""
       )}
-      <p>{`Internal Column: ${scheme?.internalColumnSquare}`}</p>
-      <p>{`Edge Column: ${scheme?.edgeColumnSquare}`}</p>
-      <p>{`Corner Column: ${scheme?.cornerColumnSquare}`}</p>
+      <p>{`Internal Column: ${scheme?.internalColumn}`}</p>
+      <p>{`Edge Column: ${scheme?.edgeColumn}`}</p>
+      <p>{`Corner Column: ${scheme?.cornerColumn}`}</p>
       <p>{`Internal Column Load (ULS): ${scheme?.internalULSLoad} kN`}</p>
       <p>{`Edge Column Load (ULS): ${scheme?.edgeULSLoad} kN`}</p>
       <p>{`Corner Column Load (ULS): ${scheme?.cornerULSLoad} kN`}</p>

@@ -98,6 +98,8 @@ function FlatSlabDesign(
   const rebarRatio = designData.projectSettings.rebarRate;
 
   // Use chart data for internal column sizing
+  var internalColumnSquare = 0;
+
   const internalRebarCurve =
     schemeDesignData.internalRCColumn[
       rebarRatio as keyof typeof schemeDesignData.internalRCColumn
@@ -113,9 +115,9 @@ function FlatSlabDesign(
       : prev;
   });
 
-  const internalColumnSquare = Math.ceil(closestColumnWidth[1] / 25) * 25;
-  var edgeColumnSquare = 225;
-  var cornerColumnSquare = 225;
+  internalColumnSquare = Math.ceil(closestColumnWidth[1] / 25) * 25;
+  var edgeColumnSquare = 0;
+  var cornerColumnSquare = 0;
 
   // Use chart data for edge column sizing
   for (const [edgeColumnSize, curve] of Object.entries(
@@ -285,9 +287,18 @@ function FlatSlabDesign(
     schemeType: "RC Flat Slab",
     structuralDepth: slabDepth,
     validSteelBeams: "",
-    internalColumnSquare: internalColumnSquare + "mm Square",
-    edgeColumnSquare: edgeColumnSquare + "mm Square",
-    cornerColumnSquare: cornerColumnSquare + "mm Square",
+    internalColumn:
+      internalColumnULSLTD > 10000
+        ? "No Valid Design"
+        : internalColumnSquare + "mm Square",
+    edgeColumn:
+      edgeColumnSquare == 0
+        ? "No Valid Design"
+        : edgeColumnSquare + "mm Square",
+    cornerColumn:
+      cornerColumnSquare == 0
+        ? "No Valid Design"
+        : cornerColumnSquare + "mm Square",
     internalULSLoad: internalColumnULSLTD.toFixed(2),
     edgeULSLoad: edgeColumnULSLTD.toFixed(2),
     cornerULSLoad: cornerColumnULSLTD.toFixed(2),

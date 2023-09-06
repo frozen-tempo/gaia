@@ -18,7 +18,7 @@ ul {
 
 .main-nav {
   display: flex;
-  width: 100%;
+  width: 100vw;
   height: 75px;
   border-bottom: 3px solid #575395;
   align-items: center;

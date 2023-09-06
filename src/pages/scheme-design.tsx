@@ -32,6 +32,7 @@ function SchemeMain() {
       rebarCarbon: "Steel - Rebar (UK CARES)",
       steelCarbon: "Steel - Europe Sections",
     },
+    entryFieldsFilled: false,
   });
 
   const DLSubTypes = internalToolsData.DLSubTypes;
@@ -41,6 +42,12 @@ function SchemeMain() {
   const RebarCarbon = internalToolsData.RebarCarbon;
   const SteelCarbon = internalToolsData.SteelCarbon;
   const TimberCarbon = internalToolsData.TimberCarbon;
+  projectData.entryFieldsFilled = checkEntryForms(
+    projectData.buildingHeight,
+    projectData.floorHeight,
+    projectData.xGrid,
+    projectData.yGrid
+  );
 
   const [isDLOpen, setIsDLOpen] = useState(false);
   const [isLLOpen, setIsLLOpen] = useState(false);
@@ -85,6 +92,19 @@ function SchemeMain() {
 
   function editProjectSettings() {
     setProjectSettingOpen(!projectSettingOpen);
+  }
+
+  function checkEntryForms(
+    buildingHeight: number,
+    floorHeight: number,
+    xGrid: number,
+    yGrid: number
+  ) {
+    if (buildingHeight > 0 && floorHeight > 0 && xGrid > 0 && yGrid > 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return (
@@ -187,7 +207,7 @@ function SchemeMain() {
             <label htmlFor="buildingType" className="input-box-title">
               BUILDING TYPE
               <input
-                type="number"
+                type="text"
                 name="buildingType"
                 className="input-box"
                 onChange={handleChange}
@@ -277,7 +297,14 @@ function SchemeMain() {
           </button>
         </section>
       </div>
-      <SchemeCard {...projectData} />
+
+      {checkEntryForms(
+        projectData.buildingHeight,
+        projectData.floorHeight,
+        projectData.xGrid,
+        projectData.yGrid
+      ) && <SchemeCard {...projectData} />}
+
       {projectSettingOpen && (
         <ProjectSettings
           setIsOpen={setProjectSettingOpen}
