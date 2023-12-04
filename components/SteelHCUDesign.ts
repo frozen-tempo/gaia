@@ -4,6 +4,7 @@ import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
 import SteelBeamDesign from "./SteelBeamDesign";
+import SteelColumnDesign from "./SteelColumnDesign";
 interface HCUDesignData {
   design: [[]];
   selfWeight: number;
@@ -106,6 +107,13 @@ function SteelHCUDesign(
 
   // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
 
+  SteelColumnDesign(
+    designData,
+    internalLTD.columnLoadULS,
+    edgeLTD.columnLoadULS,
+    cornerLTD.columnLoadULS
+  );
+
   return {
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
@@ -113,9 +121,9 @@ function SteelHCUDesign(
     internalColumn: "internalColumnSquare",
     edgeColumn: "edgeColumnSquare",
     cornerColumn: "cornerColumnSquare",
-    internalULSLoad: internalLTD.columnLoadSLS,
-    edgeULSLoad: edgeLTD.columnLoadSLS,
-    cornerULSLoad: cornerLTD.columnLoadSLS,
+    internalULSLoad: internalLTD.columnLoadULS.toFixed(2),
+    edgeULSLoad: edgeLTD.columnLoadULS.toFixed(2),
+    cornerULSLoad: cornerLTD.columnLoadULS.toFixed(2),
     grossInternalFloorArea: "GIA",
     A1_A5: "A1_A5",
   };
