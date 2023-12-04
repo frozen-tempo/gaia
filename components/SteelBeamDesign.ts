@@ -40,10 +40,9 @@ function SteelBeamDesign(
     );
   });
 
-  return {
-    //     validBeams: beamList.reverse(),
-    //   };
-  };
+  beamList = beamList.reverse();
+
+  return beamList;
 }
 
 export default SteelBeamDesign;

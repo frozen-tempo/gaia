@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import * as d3 from "d3";
-// import SteelHCUDesign from "./SteelHCUDesign";
+import SteelHCUDesign from "./SteelHCUDesign";
 
 function SchemeCard(props: projectData) {
   let deadLoadTotal = 0;
@@ -44,17 +44,18 @@ function SchemeCard(props: projectData) {
     roofLiveTotal
   );
 
-  // const HCUSteel = SteelHCUDesign(
-  //   props,
-  //   deadLoadTotal,
-  //   groundDeadTotal,
-  //   roofDeadTotal,
-  //   liveLoadTotal,
-  //   groundLiveTotal,
-  //   roofLiveTotal
-  // );
+  const HCUSteel = SteelHCUDesign(
+    props,
+    deadLoadTotal,
+    groundDeadTotal,
+    roofDeadTotal,
+    liveLoadTotal,
+    groundLiveTotal,
+    roofLiveTotal
+  );
 
   designs.push(flatSlab);
+  designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className={"scheme-card"}>
@@ -64,7 +65,7 @@ function SchemeCard(props: projectData) {
         src="/Flat-Slab-Icon.svg"
         alt="flat-slab-icon"
       />
-      <p>{`Structural Depth: ${scheme?.structuralDepth}mm`}</p>
+      <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
       {scheme?.schemeType != "RC Flat Slab" ? (
         <p>{`Steel Beam: ${scheme.validSteelBeams[0]}`}</p>
       ) : (
