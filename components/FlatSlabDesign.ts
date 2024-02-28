@@ -1,32 +1,47 @@
 import React from "react";
-import { InternalSymbolName } from "typescript";
-import { projectData, schemeDesign } from "typings";
+import { Load, loadingTotals, projectData, schemeDesign } from "typings";
 import schemeDesignData from "../src/data/scheme-design-chart-data.json";
 import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
+import simpleLTD from "./SimpleLTD";
 
-function FlatSlabDesign(
-  designData: projectData,
-  deadLoadTotal: number,
-  groundDeadTotal: number,
-  roofDeadTotal: number,
-  liveLoadTotal: number,
-  groundLiveTotal: number,
-  roofLiveTotal: number
-) {
+function FlatSlabDesign(designData: projectData) {
   /* Find Find LL Curve from Flat Slab Data */
+  function getTotalLoads(loads: Load[]) {
+    let loadTotal = 0;
+    let groundTotal = 0;
+    let roofTotal = 0;
+    loads.map((load) => {
+      if (load.loadGround === false && load.loadRoof === false) {
+        loadTotal = loadTotal + +load.loadValue;
+      } else if (load.loadGround && load.loadRoof === false) {
+        groundTotal = groundTotal + +load.loadValue;
+      } else {
+        roofTotal = roofTotal + +load.loadValue;
+      }
+    });
+    return { loadTotal, groundTotal, roofTotal };
+  }
+
+  const deadLoads = getTotalLoads(designData.deadLoads);
+  const liveLoads = getTotalLoads(designData.liveLoads);
+
   var flatSlabCurves = Object.keys(schemeDesignData.flatSlab);
-  const LLGoal = (deadLoadTotal: number, liveLoadTotal: number): number => {
-    if (deadLoadTotal > 0 && liveLoadTotal > 0) {
-      return (1.25 * (deadLoadTotal - 1.5)) / 1.5 + liveLoadTotal;
+  const LLGoal = (deadLoadsTotal: number, liveLoadsTotal: number): number => {
+    if (deadLoadsTotal > 0 && liveLoadsTotal > 0) {
+      return (1.25 * (deadLoads.loadTotal - 1.5)) / 1.5 + liveLoads.loadTotal;
     } else {
       return 2.5;
     }
   };
   var closestLL = +flatSlabCurves.reduce(function (prev: string, curr: string) {
-    return Math.abs(parseInt(curr) - LLGoal(deadLoadTotal, liveLoadTotal)) <
-      Math.abs(parseInt(prev) - LLGoal(deadLoadTotal, liveLoadTotal))
+    return Math.abs(
+      parseInt(curr) - LLGoal(deadLoads.loadTotal, liveLoads.loadTotal)
+    ) <
+      Math.abs(
+        parseInt(prev) - LLGoal(deadLoads.loadTotal, liveLoads.loadTotal)
+      )
       ? curr
       : prev;
   });
@@ -52,48 +67,35 @@ function FlatSlabDesign(
   const numFloors =
     Math.floor(designData.buildingHeight / designData.floorHeight) - 1;
 
-  const intermediateInternalColumnArea =
-    designData.xGrid * designData.yGrid * numFloors;
-
-  const otherInternalColumnArea = designData.xGrid * designData.yGrid;
   const slabSW = (slabDepth / 1000) * 25;
 
-  function simpleLTD(intermediateColumnArea: number, otherColumnArea: number) {
-    const totalSlabSWColumn =
-      slabSW * (intermediateColumnArea + otherColumnArea);
-
-    const totalSDLColumn =
-      intermediateColumnArea * deadLoadTotal + otherColumnArea * roofDeadTotal;
-
-    const totalLLColumn =
-      intermediateColumnArea * liveLoadTotal + otherColumnArea * roofLiveTotal;
-
-    const columnLoadSLS = totalSlabSWColumn + totalLLColumn + totalSDLColumn;
-
-    const columnLoadULS =
-      1.35 * totalSlabSWColumn + 1.5 * totalLLColumn + 1.35 * totalSDLColumn;
-    return {
-      columnLoadULS: columnLoadULS,
-      columnLoadSLS: columnLoadSLS,
-    };
-  }
+  const floorArea = designData.xGrid * designData.yGrid;
 
   // Internal Column Simple LTD
   const internalLTD = simpleLTD(
-    intermediateInternalColumnArea,
-    otherInternalColumnArea
+    floorArea,
+    slabSW,
+    designData.deadLoads,
+    designData.liveLoads,
+    numFloors
   );
 
   // Edge Column Simple LTD
   const edgeLTD = simpleLTD(
-    intermediateInternalColumnArea / 2,
-    otherInternalColumnArea / 2
+    floorArea / 2,
+    slabSW,
+    designData.deadLoads,
+    designData.liveLoads,
+    numFloors
   );
 
   // Corner Column Simple LTD
   const cornerLTD = simpleLTD(
-    intermediateInternalColumnArea / 4,
-    otherInternalColumnArea / 4
+    floorArea / 4,
+    slabSW,
+    designData.deadLoads,
+    designData.liveLoads,
+    numFloors
   );
 
   const rebarRatio = designData.projectSettings.rebarRate;
@@ -287,9 +289,8 @@ function FlatSlabDesign(
   return {
     schemeType: "RC Flat Slab",
     structuralDepth: slabDepth,
-    validSteelBeams: "",
     internalColumn:
-      internalColumnULSLTD > 10000
+      internalLTD.columnLoadULS > 10000
         ? "No Valid Design"
         : internalColumnSquare + "mm Square",
     edgeColumn:

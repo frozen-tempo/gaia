@@ -4,58 +4,13 @@ import FlatSlabDesign from "./FlatSlabDesign";
 import * as d3 from "d3";
 import SteelHCUDesign from "./SteelHCUDesign";
 
-function SchemeCard(props: projectData) {
-  let deadLoadTotal = 0;
-  let groundDeadTotal = 0;
-  let roofDeadTotal = 0;
-  props.deadLoads?.map((load) => {
-    if (load.loadGround === false && load.loadRoof === false) {
-      deadLoadTotal = deadLoadTotal + +load.loadValue;
-    } else if (load.loadGround && load.loadRoof === false) {
-      groundDeadTotal = groundDeadTotal + +load.loadValue;
-    } else {
-      roofDeadTotal = roofDeadTotal + +load.loadValue;
-    }
-    return { deadLoadTotal, groundDeadTotal, roofDeadTotal };
-  });
-
-  let liveLoadTotal = 0;
-  let groundLiveTotal = 0;
-  let roofLiveTotal = 0;
-  props.liveLoads?.map((load) => {
-    if (load.loadGround === false && load.loadRoof === false) {
-      liveLoadTotal = liveLoadTotal + +load.loadValue;
-    } else if (load.loadGround && load.loadRoof === false) {
-      groundLiveTotal = groundLiveTotal + +load.loadValue;
-    } else {
-      roofLiveTotal = roofLiveTotal + +load.loadValue;
-    }
-    return { liveLoadTotal, groundLiveTotal, roofLiveTotal };
-  });
-
+function SchemeCard(designData: projectData) {
   let designs = [];
-  const flatSlab = FlatSlabDesign(
-    props,
-    deadLoadTotal,
-    groundDeadTotal,
-    roofDeadTotal,
-    liveLoadTotal,
-    groundLiveTotal,
-    roofLiveTotal
-  );
-
-  const HCUSteel = SteelHCUDesign(
-    props,
-    deadLoadTotal,
-    groundDeadTotal,
-    roofDeadTotal,
-    liveLoadTotal,
-    groundLiveTotal,
-    roofLiveTotal
-  );
+  const flatSlab = FlatSlabDesign(designData);
+  //const HCUSteel = SteelHCUDesign(designData);
 
   designs.push(flatSlab);
-  designs.push(HCUSteel);
+  //designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className={"scheme-card"}>
@@ -66,11 +21,7 @@ function SchemeCard(props: projectData) {
         alt="flat-slab-icon"
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
-      {scheme?.schemeType != "RC Flat Slab" ? (
-        <p>{`Steel Beam: ${scheme.validSteelBeams[0]}`}</p>
-      ) : (
-        ""
-      )}
+      {scheme?.schemeType != "RC Flat Slab" ? <p>Placeholder</p> : ""}
       <p>{`Internal Column: ${scheme?.internalColumn}`}</p>
       <p>{`Edge Column: ${scheme?.edgeColumn}`}</p>
       <p>{`Corner Column: ${scheme?.cornerColumn}`}</p>

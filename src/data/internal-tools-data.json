@@ -28,6 +28,7 @@
     { "Type": "Structural Topping" },
     { "Type": "Green Roof" },
     { "Type": "Suspended Ceiling" },
+    { "Type": "Facade" },
     { "Type": "Misc." }
   ],
   "LLSubTypes": [

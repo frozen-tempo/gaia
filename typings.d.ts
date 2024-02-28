@@ -19,6 +19,12 @@ export interface Load {
   loadingNature: string;
 }
 
+export interface loadingTotals {
+  loadTotal: number;
+  groundTotal: number;
+  roofTotal: number;
+}
+
 export interface projectData {
   projectTitle: string;
   projectNumber: string;

@@ -107,12 +107,7 @@ function SteelHCUDesign(
 
   // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
 
-  SteelColumnDesign(
-    designData,
-    internalLTD.columnLoadULS,
-    edgeLTD.columnLoadULS,
-    cornerLTD.columnLoadULS
-  );
+  SteelColumnDesign(designData, internalLTD.columnLoadULS);
 
   return {
     schemeType: "Steel Beam & HCU Slab",
