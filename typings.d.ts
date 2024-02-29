@@ -19,6 +19,24 @@ export interface Load {
   loadingNature: string;
 }
 
+export interface elementData {
+  material: string;
+  materialSpec: string;
+  volume: number;
+  rebarRate: string;
+  carbonData: {
+    name: string;
+    A1_A3: number;
+    A4: number;
+    WF: number;
+    C2: number;
+    C3_C4: number;
+    D: number;
+    sequestration: number;
+    density: number;
+  };
+}
+
 export interface loadingTotals {
   loadTotal: number;
   groundTotal: number;

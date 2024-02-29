@@ -5,6 +5,7 @@ import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
 import simpleLTD from "./SimpleLTD";
+import RCColumnDesign from "./RCColumnDesign";
 
 function FlatSlabDesign(designData: projectData) {
   /* Find Find LL Curve from Flat Slab Data */
@@ -100,109 +101,41 @@ function FlatSlabDesign(designData: projectData) {
 
   const rebarRatio = designData.projectSettings.rebarRate;
 
-  // Use chart data for internal column sizing
-  var internalColumnSquare = 0;
-
-  const internalRebarCurve =
-    schemeDesignData.internalRCColumn[
-      rebarRatio as keyof typeof schemeDesignData.internalRCColumn
-    ];
-
-  var closestColumnWidth = internalRebarCurve.reduce(function (
-    prev: number[],
-    curr: number[]
-  ) {
-    return Math.abs(curr[0] - internalLTD.columnLoadULS) <
-      Math.abs(prev[0] - internalLTD.columnLoadULS)
-      ? curr
-      : prev;
-  });
-
-  internalColumnSquare = Math.ceil(closestColumnWidth[1] / 25) * 25;
-  var edgeColumnSquare = 0;
-  var cornerColumnSquare = 0;
-
-  // Use chart data for edge column sizing
-  for (const [edgeColumnSize, curve] of Object.entries(
-    schemeDesignData.EdgeRCColumnDesign1
-  )) {
-    const loadCurve = loadKey
-      ? curve[loadKey as keyof typeof curve]
-      : curve["2.5"];
-    const edgeColumnDesignMoment = loadCurve.reduce(function (
-      prev: number[],
-      curr: number[]
-    ) {
-      return Math.abs(curr[0] - spanGoal) < Math.abs(prev[0] - spanGoal)
-        ? curr
-        : prev;
-    });
-    const rebarCurve: number[][] = (
-      schemeDesignData.EdgeRCColumnDesign2 as {
-        [key: string]: { [key: string]: number[][] };
-      }
-    )[edgeColumnSize][rebarRatio];
-    if (
-      RayCasting(edgeColumnDesignMoment[1], edgeLTD.columnLoadULS, rebarCurve)
-    ) {
-      edgeColumnSquare = +edgeColumnSize;
-      break;
-    }
-  }
-
-  // Use chart data for corner column sizing
-  for (const [cornerColumnSize, curve] of Object.entries(
-    schemeDesignData.CornerRCColumnDesign1
-  )) {
-    const loadCurve = loadKey
-      ? curve[loadKey as keyof typeof curve]
-      : curve["2.5"];
-    const cornerColumnDesignMoment = loadCurve.reduce(function (
-      prev: number[],
-      curr: number[]
-    ) {
-      return Math.abs(curr[0] - spanGoal) < Math.abs(prev[0] - spanGoal)
-        ? curr
-        : prev;
-    });
-    const rebarCurve: number[][] = (
-      schemeDesignData.CornerRCColumnDesign2 as {
-        [key: string]: { [key: string]: number[][] };
-      }
-    )[cornerColumnSize][rebarRatio];
-    if (
-      RayCasting(
-        cornerColumnDesignMoment[1],
-        cornerLTD.columnLoadULS,
-        rebarCurve
-      )
-    ) {
-      cornerColumnSquare = +cornerColumnSize;
-      break;
-    }
-  }
+  const columnSizing = RCColumnDesign(
+    internalLTD.columnLoadULS,
+    edgeLTD.columnLoadULS,
+    cornerLTD.columnLoadULS,
+    spanGoal,
+    loadKey,
+    rebarRatio
+  );
 
   // Column Loads Including Column SW
 
   const internalColumnULSLTD =
     internalLTD.columnLoadULS +
-    1.35 * designData.buildingHeight * (internalColumnSquare / 1000) ** 2 * 25;
+    1.35 *
+      designData.buildingHeight *
+      (columnSizing.internalColumn.size / 1000) ** 2 *
+      25;
   const edgeColumnULSLTD =
     edgeLTD.columnLoadULS +
-    1.35 * designData.buildingHeight * (edgeColumnSquare / 1000) ** 2 * 25 * 4;
+    1.35 *
+      designData.buildingHeight *
+      (columnSizing.edgeColumn.size / 1000) ** 2 *
+      25;
   const cornerColumnULSLTD =
     cornerLTD.columnLoadULS +
     1.35 *
       designData.buildingHeight *
-      (cornerColumnSquare / 1000) ** 2 *
-      25 *
-      4;
+      (columnSizing.cornerColumn.size / 1000) ** 2 *
+      25;
 
   // Carbon Calculation
   const GIA = 4 * designData.xGrid * designData.yGrid * (numFloors + 1); // Gross Internal Floor Area
-  const cornerColumnArea = (4 * cornerColumnSquare ** 2) / 1000000;
-  const edgeColumnArea = (4 * edgeColumnSquare ** 2) / 1000000;
-  const internalColumnArea = internalColumnSquare ** 2 / 1000000;
+  const cornerColumnArea = (4 * columnSizing.cornerColumn.size ** 2) / 1000000;
+  const edgeColumnArea = (4 * columnSizing.edgeColumn.size ** 2) / 1000000;
+  const internalColumnArea = columnSizing.internalColumn.size ** 2 / 1000000;
 
   const columnCarbon = carbonData.Concrete.filter(
     (a) => a.name == designData.projectSettings.concreteColumnCarbon
@@ -292,15 +225,15 @@ function FlatSlabDesign(designData: projectData) {
     internalColumn:
       internalLTD.columnLoadULS > 10000
         ? "No Valid Design"
-        : internalColumnSquare + "mm Square",
+        : columnSizing.internalColumn.size + "mm Square",
     edgeColumn:
-      edgeColumnSquare == 0
+      columnSizing.edgeColumn.size == 0
         ? "No Valid Design"
-        : edgeColumnSquare + "mm Square",
+        : columnSizing.edgeColumn.size + "mm Square",
     cornerColumn:
-      cornerColumnSquare == 0
+      columnSizing.cornerColumn.size == 0
         ? "No Valid Design"
-        : cornerColumnSquare + "mm Square",
+        : columnSizing.cornerColumn.size + "mm Square",
     internalULSLoad: internalColumnULSLTD.toFixed(2),
     edgeULSLoad: edgeColumnULSLTD.toFixed(2),
     cornerULSLoad: cornerColumnULSLTD.toFixed(2),
