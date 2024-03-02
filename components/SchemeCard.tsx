@@ -7,10 +7,10 @@ import SteelHCUDesign from "./SteelHCUDesign";
 function SchemeCard(designData: projectData) {
   let designs = [];
   const flatSlab = FlatSlabDesign(designData);
-  //const HCUSteel = SteelHCUDesign(designData);
+  const HCUSteel = SteelHCUDesign(designData);
 
   designs.push(flatSlab);
-  //designs.push(HCUSteel);
+  designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className={"scheme-card"}>
@@ -21,7 +21,11 @@ function SchemeCard(designData: projectData) {
         alt="flat-slab-icon"
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
-      {scheme?.schemeType != "RC Flat Slab" ? <p>Placeholder</p> : ""}
+      {scheme?.schemeType != "RC Flat Slab" ? (
+        <p>{`Steel Beam: ${scheme?.validSteelBeams}`}</p>
+      ) : (
+        ""
+      )}
       <p>{`Internal Column: ${scheme?.internalColumn}`}</p>
       <p>{`Edge Column: ${scheme?.edgeColumn}`}</p>
       <p>{`Corner Column: ${scheme?.cornerColumn}`}</p>

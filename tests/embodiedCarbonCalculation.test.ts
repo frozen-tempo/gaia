@@ -56,47 +56,22 @@ const projectData1 = {
   entryFieldsFilled: false,
 };
 
-const columnCarbon = carbonData.Concrete.filter(
-  (a) => a.name == projectData1.projectSettings.concreteColumnCarbon
+const columnCarbon = JSON.parse(
+  JSON.stringify(
+    carbonData.Concrete.filter(
+      (a) => a.name == projectData1.projectSettings.concreteColumnCarbon
+    )[0]
+  )
 );
 
-const carbonData1 = JSON.parse(JSON.stringify(columnCarbon[0]));
-console.log(carbonData1);
-
-const structureData1 = [
-  {
-    elementType: "internalColumn",
-    material: "RC",
-    materialSpec: projectData1.projectSettings.concreteColumnCarbon,
-    volume: 0.9,
-    rebarRate: "1%",
-    carbonData: carbonData1,
-  },
-  {
-    elementType: "edgeColumn",
-    material: "RC",
-    materialSpec: projectData1.projectSettings.concreteColumnCarbon,
-    volume: 3.6,
-    rebarRate: "1%",
-    carbonData: carbonData1,
-  },
-  {
-    elementType: "cornerColumn",
-    material: "RC",
-    materialSpec: projectData1.projectSettings.concreteColumnCarbon,
-    volume: 2.025,
-    rebarRate: "1%",
-    carbonData: carbonData1,
-  },
-  {
-    elementType: "cornerColumn",
-    material: "RC",
-    materialSpec: projectData1.projectSettings.concreteColumnCarbon,
-    volume: 2.025,
-    rebarRate: "1%",
-    carbonData: carbonData1,
-  },
-];
+const structureData1 = {
+  elementType: "internalColumn",
+  material: "RC",
+  materialSpec: projectData1.projectSettings.concreteColumnCarbon,
+  volume: 0.9,
+  rebarRate: "1%",
+  carbonData: columnCarbon,
+};
 
 test("Embodied Carbon Test Case 1: ", () => {
   expect(embodiedCarbonCalculation(projectData1, structureData1)).toEqual([
@@ -111,7 +86,7 @@ test("Embodied Carbon Test Case 1: ", () => {
       sequestration: 0,
     },
     {
-      elementType: "internalColumn",
+      elementType: "edgeColumn",
       A1_A3: 0,
       A4: 0,
       WF: 0,
