@@ -167,56 +167,56 @@ function FlatSlabDesign(designData: projectData) {
 
   // Column Embodied Carbon
   const columnEmbodied = {
-    "A1-A3": columnVolume * columnCarbon[0].density * columnCarbon[0]["A1-A3"],
+    A1_A3: columnVolume * columnCarbon[0].density * columnCarbon[0]["A1_A3"],
     A4: columnVolume * columnCarbon[0].density * columnCarbon[0]["A4"],
     A5:
       columnVolume *
       columnCarbon[0].density *
-      ((columnCarbon[0]["A1-A3"] + columnCarbon[0]["A4"]) *
+      ((columnCarbon[0]["A1_A3"] + columnCarbon[0]["A4"]) *
         columnCarbon[0]["WF"]),
     C2: columnVolume * columnCarbon[0].density * columnCarbon[0]["C2"],
-    "C3/C4": columnVolume * columnCarbon[0].density * columnCarbon[0]["C3/C4"],
+    "C3/C4": columnVolume * columnCarbon[0].density * columnCarbon[0]["C3_C4"],
     D: columnVolume * columnCarbon[0].density * columnCarbon[0]["D"],
     Sequestration:
-      columnVolume * columnCarbon[0].density * columnCarbon[0]["Sequestration"],
+      columnVolume * columnCarbon[0].density * columnCarbon[0]["sequestration"],
   };
 
   // Slab Embodied Carbon
   const slabEmbodied = {
-    "A1-A3": slabVolume * slabCarbon[0].density * slabCarbon[0]["A1-A3"],
+    A1_A3: slabVolume * slabCarbon[0].density * slabCarbon[0]["A1_A3"],
     A4: slabVolume * slabCarbon[0].density * slabCarbon[0]["A4"],
     A5:
       slabVolume *
       slabCarbon[0].density *
-      ((slabCarbon[0]["A1-A3"] + slabCarbon[0]["A4"]) * slabCarbon[0]["WF"]),
+      ((slabCarbon[0]["A1_A3"] + slabCarbon[0]["A4"]) * slabCarbon[0]["WF"]),
     C2: slabVolume * slabCarbon[0].density * slabCarbon[0]["C2"],
-    "C3/C4": slabVolume * slabCarbon[0].density * slabCarbon[0]["C3/C4"],
+    "C3/C4": slabVolume * slabCarbon[0].density * slabCarbon[0]["C3_C4"],
     D: slabVolume * slabCarbon[0].density * slabCarbon[0]["D"],
     Sequestration:
-      slabVolume * slabCarbon[0].density * slabCarbon[0]["Sequestration"],
+      slabVolume * slabCarbon[0].density * slabCarbon[0]["sequestration"],
   };
 
   // Rebar Embodied Carbon
   const rebarEmbodied = {
-    "A1-A3": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A1-A3"],
+    A1_A3: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A1_A3"],
     A4: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A4"],
     A5:
       rebarVolume *
       rebarCarbon[0].density *
-      ((rebarCarbon[0]["A1-A3"] + rebarCarbon[0]["A4"]) * rebarCarbon[0]["WF"]),
+      ((rebarCarbon[0]["A1_A3"] + rebarCarbon[0]["A4"]) * rebarCarbon[0]["WF"]),
     C2: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C2"],
-    "C3/C4": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C3/C4"],
+    "C3/C4": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C3_C4"],
     D: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["D"],
     Sequestration:
-      rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["Sequestration"],
+      rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["sequestration"],
   };
 
   const A1_A5 =
-    (columnEmbodied["A1-A3"] +
+    (columnEmbodied["A1_A3"] +
       columnEmbodied.A4 +
       columnEmbodied.A5 +
-      (slabEmbodied["A1-A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
-      (rebarEmbodied["A1-A3"] + rebarEmbodied.A4 + rebarEmbodied.A5)) /
+      (slabEmbodied["A1_A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
+      (rebarEmbodied["A1_A3"] + rebarEmbodied.A4 + rebarEmbodied.A5)) /
     GIA;
 
   return {

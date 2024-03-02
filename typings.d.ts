@@ -20,6 +20,7 @@ export interface Load {
 }
 
 export interface elementData {
+  elementType: string;
   material: string;
   materialSpec: string;
   volume: number;
