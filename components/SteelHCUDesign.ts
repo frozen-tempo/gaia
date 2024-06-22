@@ -53,7 +53,7 @@ function SteelHCUDesign(
   // Parse HCU Data to Find Shallowest Valid Slab
   for (const [slabDepth, data] of Object.entries(HCUDesignTable).sort()) {
     data.design.forEach((dataPoint) => {
-      if (dataPoint[0] > slabDesignLoad && dataPoint[1] > slabSpan) {
+      if (dataPoint[0] >= slabDesignLoad && dataPoint[1] >= slabSpan) {
         console.log(hollowCoreDepth);
         hollowCoreDepth = slabDepth;
         depthFound = true;
@@ -113,9 +113,18 @@ function SteelHCUDesign(
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
     validSteelBeams: validSteelBeams,
-    internalColumn: "internalColumnSquare",
-    edgeColumn: "edgeColumnSquare",
-    cornerColumn: "cornerColumnSquare",
+    internalColumn: SteelColumnDesign(
+      designData,
+      internalLTD.columnLoadULS
+    ).reverse()[0],
+    edgeColumn: SteelColumnDesign(
+      designData,
+      edgeLTD.columnLoadULS
+    ).reverse()[0],
+    cornerColumn: SteelColumnDesign(
+      designData,
+      cornerLTD.columnLoadULS
+    ).reverse()[0],
     internalULSLoad: internalLTD.columnLoadULS.toFixed(2),
     edgeULSLoad: edgeLTD.columnLoadULS.toFixed(2),
     cornerULSLoad: cornerLTD.columnLoadULS.toFixed(2),

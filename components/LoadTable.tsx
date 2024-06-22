@@ -34,7 +34,7 @@ function LoadTable(props: {
           <tr className="table-headers">
             <th>LOAD NO.</th>
             <th>LOAD TYPE</th>
-            <th>LOAD DESCRIPT.</th>
+            <th>LOAD DESCR.</th>
             <th>LOAD VALUE</th>
             <th>UNITS</th>
           </tr>

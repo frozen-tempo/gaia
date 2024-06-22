@@ -3,14 +3,23 @@ import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import * as d3 from "d3";
 import SteelHCUDesign from "./SteelHCUDesign";
+import getTotalLoads from "./getLoadingTotals";
 
 function SchemeCard(designData: projectData) {
   let designs = [];
   const flatSlab = FlatSlabDesign(designData);
-  //const HCUSteel = SteelHCUDesign(designData);
+  const HCUSteel = SteelHCUDesign(
+    designData,
+    getTotalLoads(designData.deadLoads).loadTotal,
+    getTotalLoads(designData.deadLoads).groundTotal,
+    getTotalLoads(designData.deadLoads).roofTotal,
+    getTotalLoads(designData.liveLoads).loadTotal,
+    getTotalLoads(designData.liveLoads).groundTotal,
+    getTotalLoads(designData.liveLoads).roofTotal
+  );
 
   designs.push(flatSlab);
-  //designs.push(HCUSteel);
+  designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className={"scheme-card"}>
@@ -21,7 +30,11 @@ function SchemeCard(designData: projectData) {
         alt="flat-slab-icon"
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
-      {scheme?.schemeType != "RC Flat Slab" ? <p>Placeholder</p> : ""}
+      {scheme?.schemeType != "RC Flat Slab" ? (
+        <p>{scheme?.validSteelBeams[0]}</p>
+      ) : (
+        ""
+      )}
       <p>{`Internal Column: ${scheme?.internalColumn}`}</p>
       <p>{`Edge Column: ${scheme?.edgeColumn}`}</p>
       <p>{`Corner Column: ${scheme?.cornerColumn}`}</p>

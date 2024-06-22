@@ -67,6 +67,7 @@ test("Test Case 1: ", () => {
     cornerULSLoad: "364.43",
     grossInternalFloorArea: "400.00",
     A1_A5: "73.20",
+    validSteelBeams: [],
   });
 });
 
@@ -109,5 +110,6 @@ test("Test Case 2: ", () => {
     cornerULSLoad: "2743.24",
     grossInternalFloorArea: "2250.00",
     A1_A5: "100.79",
+    validSteelBeams: [],
   });
 });
