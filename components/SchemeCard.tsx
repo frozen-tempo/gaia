@@ -8,6 +8,7 @@ import getTotalLoads from "./getLoadingTotals";
 function SchemeCard(designData: projectData) {
   let designs = [];
   const flatSlab = FlatSlabDesign(designData);
+<<<<<<< HEAD
   const HCUSteel = SteelHCUDesign(
     designData,
     getTotalLoads(designData.deadLoads).loadTotal,
@@ -17,6 +18,9 @@ function SchemeCard(designData: projectData) {
     getTotalLoads(designData.liveLoads).groundTotal,
     getTotalLoads(designData.liveLoads).roofTotal
   );
+=======
+  const HCUSteel = SteelHCUDesign(designData);
+>>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
 
   designs.push(flatSlab);
   designs.push(HCUSteel);
@@ -31,7 +35,11 @@ function SchemeCard(designData: projectData) {
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
       {scheme?.schemeType != "RC Flat Slab" ? (
+<<<<<<< HEAD
         <p>{scheme?.validSteelBeams[0]}</p>
+=======
+        <p>{`Steel Beam: ${scheme?.validSteelBeams}`}</p>
+>>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
       ) : (
         ""
       )}

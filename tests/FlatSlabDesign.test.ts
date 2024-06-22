@@ -62,12 +62,20 @@ test("Test Case 1: ", () => {
     internalColumn: "300mm Square",
     edgeColumn: "300mm Square",
     cornerColumn: "225mm Square",
+<<<<<<< HEAD
     internalULSLoad: "1419.75",
     edgeULSLoad: "725.06",
     cornerULSLoad: "364.43",
     grossInternalFloorArea: "400.00",
     A1_A5: "73.20",
     validSteelBeams: [],
+=======
+    internalULSLoad: 1419.75,
+    edgeULSLoad: 725.06,
+    cornerULSLoad: 364.43,
+    grossInternalFloorArea: 400,
+    A1_A5: 73,
+>>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
   });
 });
 
@@ -105,11 +113,19 @@ test("Test Case 2: ", () => {
     internalColumn: "725mm Square",
     edgeColumn: "600mm Square",
     cornerColumn: "600mm Square",
+<<<<<<< HEAD
     internalULSLoad: "10201.46",
     edgeULSLoad: "5182.73",
     cornerULSLoad: "2743.24",
     grossInternalFloorArea: "2250.00",
     A1_A5: "100.79",
     validSteelBeams: [],
+=======
+    internalULSLoad: 10201.46,
+    edgeULSLoad: 5182.73,
+    cornerULSLoad: 2743.24,
+    grossInternalFloorArea: 2250,
+    A1_A5: 101,
+>>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
   });
 });

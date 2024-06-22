@@ -1,30 +1,14 @@
 import React from "react";
-import { Load, loadingTotals, projectData, schemeDesign } from "typings";
+import { Load, projectData, schemeDesign } from "typings";
 import schemeDesignData from "../src/data/scheme-design-chart-data.json";
-import RayCasting from "./RayCasting";
 import carbonData from "../src/data/carbon-data.json";
 import ProjectSettings from "./ProjectSettings";
 import simpleLTD from "./SimpleLTD";
 import RCColumnDesign from "./RCColumnDesign";
+import embodiedCarbonCalculation from "./embodiedCarbonCalculation";
+import getTotalLoads from "./getLoadingTotals";
 
 function FlatSlabDesign(designData: projectData) {
-  /* Find Find LL Curve from Flat Slab Data */
-  function getTotalLoads(loads: Load[]) {
-    let loadTotal = 0;
-    let groundTotal = 0;
-    let roofTotal = 0;
-    loads.map((load) => {
-      if (load.loadGround === false && load.loadRoof === false) {
-        loadTotal = loadTotal + +load.loadValue;
-      } else if (load.loadGround && load.loadRoof === false) {
-        groundTotal = groundTotal + +load.loadValue;
-      } else {
-        roofTotal = roofTotal + +load.loadValue;
-      }
-    });
-    return { loadTotal, groundTotal, roofTotal };
-  }
-
   const deadLoads = getTotalLoads(designData.deadLoads);
   const liveLoads = getTotalLoads(designData.liveLoads);
 
@@ -132,30 +116,51 @@ function FlatSlabDesign(designData: projectData) {
       25;
 
   // Carbon Calculation
-  const GIA = 4 * designData.xGrid * designData.yGrid * (numFloors + 1); // Gross Internal Floor Area
+
+  const GIA =
+    4 *
+    designData.xGrid *
+    designData.yGrid *
+    Math.floor(designData.buildingHeight / designData.floorHeight);
+
+  const columnCarbon = JSON.parse(
+    JSON.stringify(
+      carbonData.Concrete.filter(
+        (a) => a.name == designData.projectSettings.concreteColumnCarbon
+      )[0]
+    )
+  );
+
+  const slabCarbon = JSON.parse(
+    JSON.stringify(
+      carbonData.Concrete.filter(
+        (a) => a.name == designData.projectSettings.concreteSlabCarbon
+      )[0]
+    )
+  );
+
+  const rebarCarbon = JSON.parse(
+    JSON.stringify(
+      carbonData.Rebar.filter(
+        (a) => a.name == designData.projectSettings.rebarCarbon
+      )[0]
+    )
+  );
+
   const cornerColumnArea = (4 * columnSizing.cornerColumn.size ** 2) / 1000000;
   const edgeColumnArea = (4 * columnSizing.edgeColumn.size ** 2) / 1000000;
   const internalColumnArea = columnSizing.internalColumn.size ** 2 / 1000000;
-
-  const columnCarbon = carbonData.Concrete.filter(
-    (a) => a.name == designData.projectSettings.concreteColumnCarbon
-  );
-
-  const slabCarbon = carbonData.Concrete.filter(
-    (a) => a.name == designData.projectSettings.concreteSlabCarbon
-  );
-
-  const rebarCarbon = carbonData.Rebar.filter(
-    (a) => a.name == designData.projectSettings.rebarCarbon
-  );
 
   const columnVolume =
     (cornerColumnArea + edgeColumnArea + internalColumnArea) *
     designData.buildingHeight;
 
-  const slabArea = 4 * designData.xGrid * designData.yGrid * (numFloors + 1);
-
-  const slabVolume = slabArea * (slabDepth / 1000);
+  const slabVolume =
+    4 *
+    designData.xGrid *
+    designData.yGrid *
+    (numFloors + 1) *
+    (slabDepth / 1000);
 
   const rebarVolume =
     (+designData.projectSettings.rebarRate.slice(
@@ -165,64 +170,46 @@ function FlatSlabDesign(designData: projectData) {
       100) *
     (columnVolume + slabVolume);
 
-  // Column Embodied Carbon
-  const columnEmbodied = {
-    A1_A3: columnVolume * columnCarbon[0].density * columnCarbon[0]["A1_A3"],
-    A4: columnVolume * columnCarbon[0].density * columnCarbon[0]["A4"],
-    A5:
-      columnVolume *
-      columnCarbon[0].density *
-      ((columnCarbon[0]["A1_A3"] + columnCarbon[0]["A4"]) *
-        columnCarbon[0]["WF"]),
-    C2: columnVolume * columnCarbon[0].density * columnCarbon[0]["C2"],
-    "C3/C4": columnVolume * columnCarbon[0].density * columnCarbon[0]["C3_C4"],
-    D: columnVolume * columnCarbon[0].density * columnCarbon[0]["D"],
-    Sequestration:
-      columnVolume * columnCarbon[0].density * columnCarbon[0]["sequestration"],
-  };
+  const columnEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Columns",
+    material: "RC",
+    materialSpec: designData.projectSettings.concreteColumnCarbon,
+    volume: columnVolume,
+    rebarRate: designData.projectSettings.rebarRate,
+    carbonData: columnCarbon,
+  });
 
-  // Slab Embodied Carbon
-  const slabEmbodied = {
-    A1_A3: slabVolume * slabCarbon[0].density * slabCarbon[0]["A1_A3"],
-    A4: slabVolume * slabCarbon[0].density * slabCarbon[0]["A4"],
-    A5:
-      slabVolume *
-      slabCarbon[0].density *
-      ((slabCarbon[0]["A1_A3"] + slabCarbon[0]["A4"]) * slabCarbon[0]["WF"]),
-    C2: slabVolume * slabCarbon[0].density * slabCarbon[0]["C2"],
-    "C3/C4": slabVolume * slabCarbon[0].density * slabCarbon[0]["C3_C4"],
-    D: slabVolume * slabCarbon[0].density * slabCarbon[0]["D"],
-    Sequestration:
-      slabVolume * slabCarbon[0].density * slabCarbon[0]["sequestration"],
-  };
+  const slabEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Slab",
+    material: "RC",
+    materialSpec: designData.projectSettings.concreteSlabCarbon,
+    volume: slabVolume,
+    rebarRate: designData.projectSettings.rebarRate,
+    carbonData: slabCarbon,
+  });
 
-  // Rebar Embodied Carbon
-  const rebarEmbodied = {
-    A1_A3: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A1_A3"],
-    A4: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["A4"],
-    A5:
-      rebarVolume *
-      rebarCarbon[0].density *
-      ((rebarCarbon[0]["A1_A3"] + rebarCarbon[0]["A4"]) * rebarCarbon[0]["WF"]),
-    C2: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C2"],
-    "C3/C4": rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["C3_C4"],
-    D: rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["D"],
-    Sequestration:
-      rebarVolume * rebarCarbon[0].density * rebarCarbon[0]["sequestration"],
-  };
+  const rebarEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Rebar",
+    material: "Steel",
+    materialSpec: designData.projectSettings.rebarCarbon,
+    volume: rebarVolume,
+    rebarRate: designData.projectSettings.rebarRate,
+    carbonData: rebarCarbon,
+  });
 
   const A1_A5 =
-    (columnEmbodied["A1_A3"] +
-      columnEmbodied.A4 +
-      columnEmbodied.A5 +
-      (slabEmbodied["A1_A3"] + slabEmbodied.A4 + slabEmbodied.A5) +
-      (rebarEmbodied["A1_A3"] + rebarEmbodied.A4 + rebarEmbodied.A5)) /
-    GIA;
+    columnEmbodiedCarbon.A1_A5 +
+    slabEmbodiedCarbon.A1_A5 +
+    rebarEmbodiedCarbon.A1_A5;
 
   return {
     schemeType: "RC Flat Slab",
+<<<<<<< HEAD
     structuralDepth: slabDepth,
     validSteelBeams: [],
+=======
+    structuralDepth: slabDepth + "mm",
+>>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
     internalColumn:
       internalLTD.columnLoadULS > 10000
         ? "No Valid Design"
@@ -235,11 +222,11 @@ function FlatSlabDesign(designData: projectData) {
       columnSizing.cornerColumn.size == 0
         ? "No Valid Design"
         : columnSizing.cornerColumn.size + "mm Square",
-    internalULSLoad: internalColumnULSLTD.toFixed(2),
-    edgeULSLoad: edgeColumnULSLTD.toFixed(2),
-    cornerULSLoad: cornerColumnULSLTD.toFixed(2),
-    grossInternalFloorArea: GIA.toFixed(2),
-    A1_A5: A1_A5.toFixed(2),
+    internalULSLoad: parseFloat(internalColumnULSLTD.toFixed(2)),
+    edgeULSLoad: parseFloat(edgeColumnULSLTD.toFixed(2)),
+    cornerULSLoad: parseFloat(cornerColumnULSLTD.toFixed(2)),
+    grossInternalFloorArea: GIA,
+    A1_A5: Math.round(A1_A5 / GIA),
   };
 }
 
