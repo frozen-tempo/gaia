@@ -222,6 +222,7 @@ function FlatSlabDesign(designData: projectData) {
     cornerULSLoad: parseFloat(cornerColumnULSLTD.toFixed(2)),
     grossInternalFloorArea: GIA,
     A1_A5: Math.round(A1_A5 / GIA),
+    validSteelBeams: null,
   };
 }
 

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import SteelHCUDesign from "./SteelHCUDesign";
+import Image from "next/image";
 
 function SchemeCard(designData: projectData) {
   let designs = [];
@@ -14,10 +15,12 @@ function SchemeCard(designData: projectData) {
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className={"scheme-card"}>
       <h2>{scheme?.schemeType}</h2>
-      <img
+      <Image
         className="scheme-image"
         src="/Flat-Slab-Icon.svg"
         alt="flat-slab-icon"
+        width={500}
+        height={300}
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
       {scheme?.schemeType != "RC Flat Slab" ? (
