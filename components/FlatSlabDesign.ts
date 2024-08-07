@@ -204,12 +204,7 @@ function FlatSlabDesign(designData: projectData) {
 
   return {
     schemeType: "RC Flat Slab",
-<<<<<<< HEAD
-    structuralDepth: slabDepth,
-    validSteelBeams: [],
-=======
     structuralDepth: slabDepth + "mm",
->>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
     internalColumn:
       internalLTD.columnLoadULS > 10000
         ? "No Valid Design"

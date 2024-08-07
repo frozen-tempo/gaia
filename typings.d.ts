@@ -74,6 +74,15 @@ export interface projectData {
 export interface schemeDesign {
   schemeType: string;
   structuralDepth: number;
+  validSteelBeams: string;
+  internalColumn: string;
+  edgeColumn: string;
+  cornerColumn: string;
+  internalULSLoad: number;
+  edgeULSLoad: number;
+  cornerULSLoad: number;
+  grossInternalFloorArea: number;
+  A1_A5: number;
 }
 
 export interface ubBeam {

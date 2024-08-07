@@ -84,15 +84,12 @@ function SteelHCUDesign(designData: projectData) {
 
   // Steel Beam Design returns a list of valid beams ordered from lightest to heaviest
   var validSteelBeams: string[] = SteelBeamDesign(
+    designData,
     deadLoads.loadTotal * slabSpan,
-    liveLoads.loadTotal * slabSpan,
-    beamSpan,
-    "full",
-    "UB",
-    360
+    liveLoads.loadTotal * slabSpan
   );
-  // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
 
+  // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
   var validSteelInternalColumns = SteelColumnDesign(
     designData,
     internalLTD.columnLoadULS
@@ -106,26 +103,10 @@ function SteelHCUDesign(designData: projectData) {
   return {
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
-<<<<<<< HEAD
-    validSteelBeams: validSteelBeams,
-    internalColumn: SteelColumnDesign(
-      designData,
-      internalLTD.columnLoadULS
-    ).reverse()[0],
-    edgeColumn: SteelColumnDesign(
-      designData,
-      edgeLTD.columnLoadULS
-    ).reverse()[0],
-    cornerColumn: SteelColumnDesign(
-      designData,
-      cornerLTD.columnLoadULS
-    ).reverse()[0],
-=======
     validSteelBeams: validSteelBeams[0],
     internalColumn: validSteelInternalColumns.slice(-1),
     edgeColumn: "edgeColumnSquare",
     cornerColumn: "cornerColumnSquare",
->>>>>>> ca90a46ccb676b93fc8fe58d38f283558a4a8dc7
     internalULSLoad: internalLTD.columnLoadULS.toFixed(2),
     edgeULSLoad: edgeLTD.columnLoadULS.toFixed(2),
     cornerULSLoad: cornerLTD.columnLoadULS.toFixed(2),

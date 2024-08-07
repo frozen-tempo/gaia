@@ -3,7 +3,6 @@ import { ubBeam, projectData, schemeDesign } from "typings";
 import schemeDesignData from "../src/data/scheme-design-chart-data.json";
 
 function SteelColumnDesign(designData: projectData, columnLoad: number) {
-  const sectionProps = SteelBeamProps;
   const UCDesignData = schemeDesignData.steelUCColumnDesign;
   const columnHeight = designData.floorHeight;
   const columnDesignData = Object.entries(UCDesignData);
