@@ -7,6 +7,7 @@ import SteelBeamDesign from "./SteelBeamDesign";
 import SteelColumnDesign from "./SteelColumnDesign";
 import simpleLTD from "./SimpleLTD";
 import getTotalLoads from "./getLoadingTotals";
+import embodiedCarbonCalculation from "./embodiedCarbonCalculation";
 
 interface HCUDesignData {
   design: [[]];
@@ -19,6 +20,7 @@ function SteelHCUDesign(designData: projectData) {
   const HCUDesignTable = schemeDesignData.precastHCU;
   const slabSpan = designData.xGrid;
   const beamSpan = designData.yGrid;
+  const steelDensity = 7850; // kg/m3
   var hollowCoreDepth = "";
   var depthFound = false;
 
@@ -27,14 +29,14 @@ function SteelHCUDesign(designData: projectData) {
 
   const slabDesignLoad = deadLoads.loadTotal + liveLoads.loadTotal;
 
-  const floorArea = designData.xGrid * designData.yGrid;
+  const floorArea = slabSpan * beamSpan;
   const numFloors =
     Math.floor(designData.buildingHeight / designData.floorHeight) - 1;
 
   const GIA =
     4 *
-    designData.xGrid *
-    designData.yGrid *
+    slabSpan *
+    beamSpan *
     Math.floor(designData.buildingHeight / designData.floorHeight);
 
   hollowCoreDepth = "No Valid Design";
@@ -42,7 +44,6 @@ function SteelHCUDesign(designData: projectData) {
   for (const [slabDepth, data] of Object.entries(HCUDesignTable).sort()) {
     data.design.forEach((dataPoint) => {
       if (dataPoint[0] >= slabDesignLoad && dataPoint[1] >= slabSpan) {
-        console.log(hollowCoreDepth);
         hollowCoreDepth = slabDepth;
         depthFound = true;
         return;
@@ -89,10 +90,22 @@ function SteelHCUDesign(designData: projectData) {
     liveLoads.loadTotal * slabSpan
   );
 
-  // Steel Column Design at Concept Stage (20% built-in conservatism at this early stage)
+  // Steel Column Design at Concept Stage
   var validSteelInternalColumns = SteelColumnDesign(
     designData,
     internalLTD.columnLoadULS
+  );
+
+  // Steel Column Design at Concept Stage
+  var validSteelEdgeColumns = SteelColumnDesign(
+    designData,
+    edgeLTD.columnLoadULS
+  );
+
+  // Steel Column Design at Concept Stage
+  var validSteelCornerColumns = SteelColumnDesign(
+    designData,
+    cornerLTD.columnLoadULS
   );
 
   if (hollowCoreDepth == "No Valid Design") {
@@ -100,18 +113,92 @@ function SteelHCUDesign(designData: projectData) {
     validSteelInternalColumns = ["No Valid Design"];
   }
 
+  const columnVolume =
+    (Number(validSteelInternalColumns.slice(-1)[0].slice(-3)) / steelDensity +
+      (4 * Number(validSteelEdgeColumns.slice(-1)[0].slice(-3))) /
+        steelDensity +
+      (4 * Number(validSteelCornerColumns.slice(-1)[0].slice(-3))) /
+        steelDensity) *
+    designData.buildingHeight;
+
+  const beamVolume =
+    (Number(validSteelBeams[0].slice(-3)) / steelDensity) *
+    (numFloors + 1) *
+    (6 * beamSpan + 6 * slabSpan);
+
+  const slabVolume =
+    ((numFloors + 1) *
+      4 *
+      (Number(
+        HCUDesignTable[hollowCoreDepth as keyof typeof HCUDesignTable]
+          .selfWeight
+      ) *
+        beamSpan *
+        slabSpan *
+        1000)) /
+    9.81 /
+    2500;
+
+  const steelCarbon = JSON.parse(
+    JSON.stringify(
+      carbonData.Steel.filter(
+        (a) => a.name == designData.projectSettings.steelCarbon
+      )[0]
+    )
+  );
+
+  const slabCarbon = JSON.parse(
+    JSON.stringify(
+      carbonData.Concrete.filter(
+        (a) => a.name == designData.projectSettings.concreteSlabCarbon
+      )[0]
+    )
+  );
+
+  const columnEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Columns",
+    material: "Steel",
+    materialSpec: designData.projectSettings.steelCarbon,
+    volume: columnVolume,
+    rebarRate: designData.projectSettings.rebarRate,
+    carbonData: steelCarbon,
+  });
+
+  const beamEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Beams",
+    material: "Steel",
+    materialSpec: designData.projectSettings.steelCarbon,
+    volume: beamVolume,
+    rebarRate: "",
+    carbonData: steelCarbon,
+  });
+
+  const slabEmbodiedCarbon = embodiedCarbonCalculation(designData, {
+    elementType: "Slabs",
+    material: "RC",
+    materialSpec: designData.projectSettings.concreteSlabCarbon,
+    volume: beamVolume,
+    rebarRate: designData.projectSettings.rebarRate,
+    carbonData: slabCarbon,
+  });
+
+  const A1_A5 =
+    columnEmbodiedCarbon.A1_A5 +
+    beamEmbodiedCarbon.A1_A5 +
+    slabEmbodiedCarbon.A1_A5;
+
   return {
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
     validSteelBeams: validSteelBeams[0],
     internalColumn: validSteelInternalColumns.slice(-1),
-    edgeColumn: "edgeColumnSquare",
-    cornerColumn: "cornerColumnSquare",
+    edgeColumn: validSteelEdgeColumns.slice(-1),
+    cornerColumn: validSteelCornerColumns.slice(-1),
     internalULSLoad: internalLTD.columnLoadULS.toFixed(2),
     edgeULSLoad: edgeLTD.columnLoadULS.toFixed(2),
     cornerULSLoad: cornerLTD.columnLoadULS.toFixed(2),
     grossInternalFloorArea: GIA,
-    A1_A5: "A1_A5",
+    A1_A5: Math.round(A1_A5 / GIA),
   };
 }
 
