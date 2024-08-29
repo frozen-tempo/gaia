@@ -13,7 +13,7 @@ function SchemeCard(designData: projectData) {
   designs.push(HCUSteel);
 
   const schemeCardElements = designs.map((scheme) => (
-    <div key={scheme?.schemeType} className={"scheme-card"}>
+    <div key={scheme?.schemeType} className="scheme-card">
       <h2>{scheme?.schemeType}</h2>
       <Image
         className="scheme-image"

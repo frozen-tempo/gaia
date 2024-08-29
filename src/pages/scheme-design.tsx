@@ -42,12 +42,6 @@ function SchemeMain() {
   const RebarCarbon = internalToolsData.RebarCarbon;
   const SteelCarbon = internalToolsData.SteelCarbon;
   const TimberCarbon = internalToolsData.TimberCarbon;
-  projectData.entryFieldsFilled = checkEntryForms(
-    projectData.buildingHeight,
-    projectData.floorHeight,
-    projectData.xGrid,
-    projectData.yGrid
-  );
 
   const [isDLOpen, setIsDLOpen] = useState(false);
   const [isLLOpen, setIsLLOpen] = useState(false);
@@ -106,6 +100,13 @@ function SchemeMain() {
       return false;
     }
   }
+
+  projectData.entryFieldsFilled = checkEntryForms(
+    projectData.buildingHeight,
+    projectData.floorHeight,
+    projectData.xGrid,
+    projectData.yGrid
+  );
 
   return (
     <main className="scheme-page">
@@ -298,12 +299,7 @@ function SchemeMain() {
         </section>
       </div>
 
-      {checkEntryForms(
-        projectData.buildingHeight,
-        projectData.floorHeight,
-        projectData.xGrid,
-        projectData.yGrid
-      ) && <SchemeCard {...projectData} />}
+      {projectData.entryFieldsFilled && <SchemeCard {...projectData} />}
 
       {projectSettingOpen && (
         <ProjectSettings

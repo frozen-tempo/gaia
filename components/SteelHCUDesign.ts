@@ -113,6 +113,8 @@ function SteelHCUDesign(designData: projectData) {
     validSteelInternalColumns = ["No Valid Design"];
   }
 
+  console.log(validSteelInternalColumns);
+
   const columnVolume =
     (Number(validSteelInternalColumns.slice(-1)[0].slice(-3)) / steelDensity +
       (4 * Number(validSteelEdgeColumns.slice(-1)[0].slice(-3))) /

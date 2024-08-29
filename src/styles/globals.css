@@ -421,6 +421,8 @@ tr:hover {
   width: 325px;
   margin: 25px;
   padding: 25px;
+  opacity: 100%;
+  transition: all 3s ease-in-out;
 }
 
 .scheme-image {
