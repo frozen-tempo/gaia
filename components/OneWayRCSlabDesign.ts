@@ -8,11 +8,18 @@ import RCColumnDesign from "./RCColumnDesign";
 import embodiedCarbonCalculation from "./embodiedCarbonCalculation";
 import getTotalLoads from "./getLoadingTotals";
 
-function FlatSlabDesign(designData: projectData) {
+function OneWayRCSlabDesign(designData: projectData) {
   const deadLoads = getTotalLoads(designData.deadLoads);
   const liveLoads = getTotalLoads(designData.liveLoads);
 
-  var flatSlabCurves = Object.keys(schemeDesignData.flatSlab);
+  const internalBeamUDL =
+    (deadLoads.loadTotal * 1.25 + liveLoads.loadTotal * 1.5) * designData.xGrid;
+  const edgeBeamUDL =
+    ((deadLoads.loadTotal * 1.25 + liveLoads.loadTotal * 1.5) *
+      designData.xGrid) /
+    2;
+
+  var oneWaySlabCurves = Object.keys(schemeDesignData.oneWaySlab);
   const LLGoal = (deadLoadsTotal: number, liveLoadsTotal: number): number => {
     if (deadLoadsTotal > 0 && liveLoadsTotal > 0) {
       return (1.25 * (deadLoads.loadTotal - 1.5)) / 1.5 + liveLoads.loadTotal;
@@ -20,7 +27,10 @@ function FlatSlabDesign(designData: projectData) {
       return 2.5;
     }
   };
-  var closestLL = +flatSlabCurves.reduce(function (prev: string, curr: string) {
+  var closestLL = +oneWaySlabCurves.reduce(function (
+    prev: string,
+    curr: string
+  ) {
     return Math.abs(
       parseInt(curr) - LLGoal(deadLoads.loadTotal, liveLoads.loadTotal)
     ) <
@@ -33,8 +43,8 @@ function FlatSlabDesign(designData: projectData) {
 
   const loadKey: string = (Math.round(closestLL * 2) / 2).toString();
   const LLCurve: number[][] =
-    schemeDesignData.flatSlab[
-      loadKey as keyof typeof schemeDesignData.flatSlab
+    schemeDesignData.oneWaySlab[
+      loadKey as keyof typeof schemeDesignData.oneWaySlab
     ];
 
   /* Find Max Span for Tables */
@@ -203,7 +213,7 @@ function FlatSlabDesign(designData: projectData) {
     rebarEmbodiedCarbon.A1_A5;
 
   return {
-    schemeType: "RC Flat Slab",
+    schemeType: "RC One Way Slab",
     structuralDepth: slabDepth + "mm",
     internalColumn:
       internalLTD.columnLoadULS > 10000
@@ -226,4 +236,4 @@ function FlatSlabDesign(designData: projectData) {
   };
 }
 
-export default FlatSlabDesign;
+export default OneWayRCSlabDesign;

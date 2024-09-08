@@ -237,28 +237,6 @@ function SchemeMain() {
               />
             </label>
           </div>
-          <div className="input6">
-            <label htmlFor="fireRating" className="input-box-title">
-              FIRE RATING (mins)
-              <input
-                type="number"
-                name="fireRating"
-                className="input-box"
-                onChange={handleChange}
-              />
-            </label>
-          </div>
-          <div className="input7">
-            <label htmlFor="natFreq" className="input-box-title">
-              MIN. NATURAL FREQ. (Hz)
-              <input
-                type="number"
-                name="natFreq"
-                className="input-box"
-                onChange={handleChange}
-              />
-            </label>
-          </div>
         </section>
         <section className="loading-info">
           <h2 className="scheme-input-header">LOAD INFORMATION</h2>

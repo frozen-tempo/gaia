@@ -113,8 +113,6 @@ function SteelHCUDesign(designData: projectData) {
     validSteelInternalColumns = ["No Valid Design"];
   }
 
-  console.log(validSteelInternalColumns);
-
   const columnVolume =
     (Number(validSteelInternalColumns.slice(-1)[0].slice(-3)) / steelDensity +
       (4 * Number(validSteelEdgeColumns.slice(-1)[0].slice(-3))) /
@@ -192,7 +190,7 @@ function SteelHCUDesign(designData: projectData) {
   return {
     schemeType: "Steel Beam & HCU Slab",
     structuralDepth: hollowCoreDepth,
-    validSteelBeams: validSteelBeams[0],
+    validBeams: validSteelBeams[0],
     internalColumn: validSteelInternalColumns.slice(-1),
     edgeColumn: validSteelEdgeColumns.slice(-1),
     cornerColumn: validSteelCornerColumns.slice(-1),

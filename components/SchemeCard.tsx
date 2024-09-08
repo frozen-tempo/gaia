@@ -3,14 +3,17 @@ import { projectData } from "typings";
 import FlatSlabDesign from "./FlatSlabDesign";
 import SteelHCUDesign from "./SteelHCUDesign";
 import Image from "next/image";
+import OneWayRCSlabDesign from "./OneWayRCSlabDesign";
 
 function SchemeCard(designData: projectData) {
   let designs = [];
   const flatSlab = FlatSlabDesign(designData);
   const HCUSteel = SteelHCUDesign(designData);
+  const oneWaySlab = OneWayRCSlabDesign(designData);
 
   designs.push(flatSlab);
   designs.push(HCUSteel);
+  designs.push(oneWaySlab);
 
   const schemeCardElements = designs.map((scheme) => (
     <div key={scheme?.schemeType} className="scheme-card">
@@ -24,7 +27,7 @@ function SchemeCard(designData: projectData) {
       />
       <p>{`Structural Depth: ${scheme?.structuralDepth}`}</p>
       {scheme?.schemeType != "RC Flat Slab" ? (
-        <p>{`Primary Beam: ${scheme?.validSteelBeams}`}</p>
+        <p>{`Primary Beam: ${scheme?.validBeams}`}</p>
       ) : (
         ""
       )}
