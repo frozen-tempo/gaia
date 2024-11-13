@@ -12,13 +12,6 @@ function OneWayRCSlabDesign(designData: projectData) {
   const deadLoads = getTotalLoads(designData.deadLoads);
   const liveLoads = getTotalLoads(designData.liveLoads);
 
-  const internalBeamUDL =
-    (deadLoads.loadTotal * 1.25 + liveLoads.loadTotal * 1.5) * designData.xGrid;
-  const edgeBeamUDL =
-    ((deadLoads.loadTotal * 1.25 + liveLoads.loadTotal * 1.5) *
-      designData.xGrid) /
-    2;
-
   var oneWaySlabCurves = Object.keys(schemeDesignData.oneWaySlab);
   const LLGoal = (deadLoadsTotal: number, liveLoadsTotal: number): number => {
     if (deadLoadsTotal > 0 && liveLoadsTotal > 0) {
@@ -56,13 +49,21 @@ function OneWayRCSlabDesign(designData: projectData) {
       : prev;
   });
 
-  const slabDepth = Math.floor(closestSpan[1] / 5) * 5;
+  const slabDepth = Math.ceil(closestSpan[1] / 5) * 5;
 
   /* LTD for Flat Slab */
   const numFloors =
     Math.floor(designData.buildingHeight / designData.floorHeight) - 1;
 
   const slabSW = (slabDepth / 1000) * 25;
+
+  const internalBeamUDL =
+    ((slabSW + deadLoads.loadTotal) * 1.25 + liveLoads.loadTotal * 1.5) *
+    designData.xGrid;
+  const edgeBeamUDL =
+    (((slabSW + deadLoads.loadTotal) * 1.25 + liveLoads.loadTotal * 1.5) *
+      designData.xGrid) /
+    2;
 
   const floorArea = designData.xGrid * designData.yGrid;
 

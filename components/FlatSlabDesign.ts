@@ -46,7 +46,7 @@ function FlatSlabDesign(designData: projectData) {
       : prev;
   });
 
-  const slabDepth = Math.floor(closestSpan[1] / 5) * 5;
+  const slabDepth = Math.ceil(closestSpan[1] / 5) * 5;
 
   /* LTD for Flat Slab */
   const numFloors =
